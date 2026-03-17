@@ -1,22 +1,29 @@
 """
 Export analysis results to Google Sheets.
-Reads: data/analysis.json
-Requires: credentials.json (Google service account or OAuth2)
+
+Reads:
+  - data/analysis.json          (summary statistics)
+  - data/tweets_with_flight_context.csv  (per-tweet data)
+  - data/flights_clean.json     (per-flight data)
+
+Requires: credentials.json (Google service account)
 
 Setup:
   1. Go to https://console.cloud.google.com
   2. Create a project, enable Google Sheets API + Google Drive API
   3. Create a Service Account, download credentials.json
-  4. Share your target Google Sheet with the service account email
-  5. Set GOOGLE_SHEET_ID and GOOGLE_SHEETS_CREDENTIALS_FILE in .env
+  4. Share your target Google Sheet with the service account email as Editor
+  5. Set GOOGLE_SHEET_ID env var (or in .env file)
+     Optionally set GOOGLE_SHEETS_CREDENTIALS_FILE (default: data/credentials.json)
 """
 
+import csv
 import json
 import os
 
 import gspread
-from google.oauth2.service_account import Credentials
 from dotenv import load_dotenv
+from google.oauth2.service_account import Credentials
 
 load_dotenv()
 
@@ -25,60 +32,20 @@ SCOPES = [
     "https://www.googleapis.com/auth/drive",
 ]
 
-CREDENTIALS_FILE = os.environ.get("GOOGLE_SHEETS_CREDENTIALS_FILE", "credentials.json")
+CREDENTIALS_FILE = os.environ.get(
+    "GOOGLE_SHEETS_CREDENTIALS_FILE", "data/credentials.json"
+)
 SHEET_ID = os.environ["GOOGLE_SHEET_ID"]
-ANALYSIS_FILE = "data/analysis.json"
+
+DATA_DIR = "data"
+ANALYSIS_FILE = os.path.join(DATA_DIR, "analysis.json")
+TWEETS_CSV = os.path.join(DATA_DIR, "tweets_with_flight_context.csv")
+FLIGHTS_FILE = os.path.join(DATA_DIR, "flights_clean.json")
 
 
 def get_client() -> gspread.Client:
     creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=SCOPES)
     return gspread.authorize(creds)
-
-
-def write_summary(sheet: gspread.Spreadsheet, summary: dict):
-    ws = get_or_create_worksheet(sheet, "Summary", rows=20, cols=3)
-    ws.clear()
-    ws.update("A1", [["Metric", "Value"]])
-    rows = [[k.replace("_", " ").title(), v] for k, v in summary.items()]
-    ws.update("A2", rows)
-    ws.format("A1:B1", {"textFormat": {"bold": True}})
-    print("  Written: Summary")
-
-
-def write_hourly(sheet: gspread.Spreadsheet, hourly: list[dict]):
-    ws = get_or_create_worksheet(sheet, "Hourly Activity", rows=len(hourly) + 2, cols=6)
-    ws.clear()
-    if not hourly:
-        return
-    headers = list(hourly[0].keys())
-    rows = [list(r.values()) for r in hourly]
-    ws.update("A1", [headers] + rows)
-    ws.format("A1:Z1", {"textFormat": {"bold": True}})
-    print(f"  Written: Hourly Activity ({len(hourly)} rows)")
-
-
-def write_tweets(sheet: gspread.Spreadsheet, tweets: list[dict]):
-    ws = get_or_create_worksheet(sheet, "Tweets", rows=len(tweets) + 2, cols=6)
-    ws.clear()
-    if not tweets:
-        return
-    headers = ["id", "created_at", "text", "in_flight", "flight_id"]
-    rows = [[str(t.get(h, "")) for h in headers] for t in tweets]
-    ws.update("A1", [headers] + rows)
-    ws.format("A1:E1", {"textFormat": {"bold": True}})
-    print(f"  Written: Tweets ({len(tweets)} rows)")
-
-
-def write_flights(sheet: gspread.Spreadsheet, flights: list[dict]):
-    ws = get_or_create_worksheet(sheet, "Flights", rows=len(flights) + 2, cols=8)
-    ws.clear()
-    if not flights:
-        return
-    headers = list(flights[0].keys())
-    rows = [[str(f.get(h, "")) for h in headers] for f in flights]
-    ws.update("A1", [headers] + rows)
-    ws.format("A1:Z1", {"textFormat": {"bold": True}})
-    print(f"  Written: Flights ({len(flights)} rows)")
 
 
 def get_or_create_worksheet(
@@ -90,22 +57,67 @@ def get_or_create_worksheet(
         return sheet.add_worksheet(title=title, rows=rows, cols=cols)
 
 
+def write_summary(sheet: gspread.Spreadsheet, stats: dict):
+    ws = get_or_create_worksheet(sheet, "Summary", rows=30, cols=3)
+    ws.clear()
+    ws.update("A1", [["Metric", "Value"]])
+    rows = [
+        [k.replace("_", " ").title(), v]
+        for k, v in stats.items()
+    ]
+    ws.update("A2", rows)
+    ws.format("A1:B1", {"textFormat": {"bold": True}})
+    print(f"  Written: Summary ({len(rows)} metrics)")
+
+
+def write_tweets(sheet: gspread.Spreadsheet, csv_path: str):
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        rows = list(reader)
+
+    if not rows:
+        return
+
+    ws = get_or_create_worksheet(sheet, "Tweets", rows=len(rows) + 2, cols=len(rows[0]))
+    ws.clear()
+    ws.update("A1", rows, value_input_option="RAW")
+    ws.format("A1:Z1", {"textFormat": {"bold": True}})
+    ws.freeze(rows=1)
+    print(f"  Written: Tweets ({len(rows) - 1} data rows, {len(rows[0])} columns)")
+
+
+def write_flights(sheet: gspread.Spreadsheet, flights: list):
+    if not flights:
+        return
+
+    headers = list(flights[0].keys())
+    rows = [[str(f.get(h, "")) for h in headers] for f in flights]
+
+    ws = get_or_create_worksheet(sheet, "Flights", rows=len(rows) + 2, cols=len(headers))
+    ws.clear()
+    ws.update("A1", [headers] + rows, value_input_option="RAW")
+    ws.format("A1:Z1", {"textFormat": {"bold": True}})
+    ws.freeze(rows=1)
+    print(f"  Written: Flights ({len(rows)} rows, {len(headers)} columns)")
+
+
 def main():
-    print("Loading analysis data...")
+    print("Loading data...")
     with open(ANALYSIS_FILE) as f:
-        data = json.load(f)
+        analysis = json.load(f)
+    with open(FLIGHTS_FILE) as f:
+        flights = json.load(f)
 
     print("Connecting to Google Sheets...")
     client = get_client()
     sheet = client.open_by_key(SHEET_ID)
 
-    print("Writing data...")
-    write_summary(sheet, data["summary"])
-    write_hourly(sheet, data["hourly"])
-    write_tweets(sheet, data["tweets"])
-    write_flights(sheet, data["flights"])
+    print("Writing sheets...")
+    write_summary(sheet, analysis)
+    write_tweets(sheet, TWEETS_CSV)
+    write_flights(sheet, flights)
 
-    print(f"\nDone! View your sheet at: https://docs.google.com/spreadsheets/d/{SHEET_ID}")
+    print(f"\nDone! View at: https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit")
 
 
 if __name__ == "__main__":
