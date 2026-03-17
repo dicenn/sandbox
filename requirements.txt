@@ -1,0 +1,6 @@
+requests==2.31.0
+pandas==2.1.4
+python-dotenv==1.0.0
+gspread==6.0.0
+google-auth==2.27.0
+pytz==2024.1
