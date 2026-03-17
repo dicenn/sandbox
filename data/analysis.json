@@ -1,0 +1,12 @@
+{
+  "total_tweets": 3196,
+  "total_flights": 36,
+  "total_flight_hours": 100.1,
+  "total_grounded_hours": 2443.9,
+  "tweets_in_flight_strict": 101,
+  "tweets_grounded": 3095,
+  "tweet_rate_in_flight_per_hr": 1.01,
+  "tweet_rate_grounded_per_hr": 1.27,
+  "ratio_flight_vs_ground": 0.8,
+  "tweets_in_flight_30min_buffer": 132
+}
