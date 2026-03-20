@@ -1,12 +1,3821 @@
 {
-  "total_tweets": 3196,
-  "total_flights": 36,
-  "total_flight_hours": 100.1,
-  "total_grounded_hours": 2443.9,
-  "tweets_in_flight_strict": 101,
-  "tweets_grounded": 3095,
-  "tweet_rate_in_flight_per_hr": 1.01,
-  "tweet_rate_grounded_per_hr": 1.27,
-  "ratio_flight_vs_ground": 0.8,
-  "tweets_in_flight_30min_buffer": 132
+  "summary": {
+    "total_tweets": 435,
+    "tweets_during_flight": 7,
+    "tweets_grounded": 428,
+    "pct_tweets_during_flight": 1.6,
+    "hourly_rate_in_flight": 7.0,
+    "hourly_rate_grounded": 4.24,
+    "ratio_flight_vs_ground": 1.65
+  },
+  "hourly": [
+    {
+      "hour": "2026-03-16 02:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 03:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 7,
+      "pct_in_flight": 100.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 05:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 07:00:00+00:00",
+      "tweet_count": 4,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 11:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 12:00:00+00:00",
+      "tweet_count": 6,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 13:00:00+00:00",
+      "tweet_count": 4,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 16:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 22:00:00+00:00",
+      "tweet_count": 15,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-16 23:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 02:00:00+00:00",
+      "tweet_count": 2,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 06:00:00+00:00",
+      "tweet_count": 2,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 07:00:00+00:00",
+      "tweet_count": 4,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 08:00:00+00:00",
+      "tweet_count": 2,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 11:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 12:00:00+00:00",
+      "tweet_count": 19,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 13:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 15:00:00+00:00",
+      "tweet_count": 11,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 16:00:00+00:00",
+      "tweet_count": 11,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-17 17:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 07:00:00+00:00",
+      "tweet_count": 23,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 08:00:00+00:00",
+      "tweet_count": 12,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 09:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 13:00:00+00:00",
+      "tweet_count": 29,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 14:00:00+00:00",
+      "tweet_count": 5,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 15:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 16:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 18:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 19:00:00+00:00",
+      "tweet_count": 2,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 20:00:00+00:00",
+      "tweet_count": 8,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 22:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-18 23:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 00:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 01:00:00+00:00",
+      "tweet_count": 6,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 02:00:00+00:00",
+      "tweet_count": 8,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 03:00:00+00:00",
+      "tweet_count": 6,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 04:00:00+00:00",
+      "tweet_count": 4,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 05:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 06:00:00+00:00",
+      "tweet_count": 20,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 07:00:00+00:00",
+      "tweet_count": 30,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 08:00:00+00:00",
+      "tweet_count": 30,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 09:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 10:00:00+00:00",
+      "tweet_count": 5,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 13:00:00+00:00",
+      "tweet_count": 16,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 14:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 17:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 19:00:00+00:00",
+      "tweet_count": 13,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 20:00:00+00:00",
+      "tweet_count": 11,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 21:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-19 23:00:00+00:00",
+      "tweet_count": 7,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 00:00:00+00:00",
+      "tweet_count": 13,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 01:00:00+00:00",
+      "tweet_count": 4,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 02:00:00+00:00",
+      "tweet_count": 1,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 04:00:00+00:00",
+      "tweet_count": 3,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 05:00:00+00:00",
+      "tweet_count": 10,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 06:00:00+00:00",
+      "tweet_count": 15,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    },
+    {
+      "hour": "2026-03-20 07:00:00+00:00",
+      "tweet_count": 5,
+      "in_flight_tweets": 0,
+      "pct_in_flight": 0.0,
+      "jet_in_air": false
+    }
+  ],
+  "tweets": [
+    {
+      "id": "2033371330159227232",
+      "created_at": "2026-03-16 02:34:37+00:00",
+      "text": "RT @ZhibeiM: Being ranked #1 doesn\u2019t mean we\u2019re good enough. It only means we're more *reasonable* than others.\nThere\u2019s still a lot of work\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033383263532937345",
+      "created_at": "2026-03-16 03:22:03+00:00",
+      "text": "@christopherrufo @fentasyl Just learned about this last week. Offered legal support as needed.",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033383517674221595",
+      "created_at": "2026-03-16 03:23:03+00:00",
+      "text": "Grok https://t.co/X9t4UTEPMl",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033384025839304934",
+      "created_at": "2026-03-16 03:25:04+00:00",
+      "text": "@Asmongold @ComicDaveSmith \ud83c\udfaf",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033385386911871134",
+      "created_at": "2026-03-16 03:30:29+00:00",
+      "text": "@Asmongold @ComicDaveSmith America does not have \u201cmagic ground\u201d that fundamentally changes who people are when they arrive here.\n\nIf we filter for high work ethic, talent &amp; trustworthiness, we will get that. \n\nIf we don\u2019t, we will inherit all the problems of the countries those people are leaving. The end.",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033385607771328737",
+      "created_at": "2026-03-16 03:31:22+00:00",
+      "text": "RT @elonmusk: @Asmongold @ComicDaveSmith America does not have \u201cmagic ground\u201d that fundamentally changes who people are when they arrive he\u2026",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033385703036576194",
+      "created_at": "2026-03-16 03:31:44+00:00",
+      "text": "RT @pmarca: There is no substitute for the person who Knows What To Do.",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033385774553641281",
+      "created_at": "2026-03-16 03:32:01+00:00",
+      "text": "@CheckCanopy @NikoWrex @neuralink @Blizzard_Ent Cool",
+      "in_flight": true,
+      "flight_id": 32.0
+    },
+    {
+      "id": "2033410934170153087",
+      "created_at": "2026-03-16 05:12:00+00:00",
+      "text": "Grok https://t.co/KLy3YOdsvd",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033441907741995186",
+      "created_at": "2026-03-16 07:15:04+00:00",
+      "text": "Starlink available in Central African Republic \ud83c\udde8\ud83c\uddeb https://t.co/WXsuQk7Uat",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033442235480735906",
+      "created_at": "2026-03-16 07:16:23+00:00",
+      "text": "RT @EvaFox: Elon Musk tells his favorite joke about economists\ud83d\ude02 https://t.co/gat9kWrmeT",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033442939796681132",
+      "created_at": "2026-03-16 07:19:11+00:00",
+      "text": "Grok Imagine triple gold \ud83e\udd47\ud83e\udd47\ud83e\udd47 https://t.co/F97brAW2Rr",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033443970563600726",
+      "created_at": "2026-03-16 07:23:16+00:00",
+      "text": "RT @cb_doge: United Airlines is showing a @Starlink commercial during the flight. https://t.co/vnyoNA4N0U",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033506484886401437",
+      "created_at": "2026-03-16 11:31:41+00:00",
+      "text": "@GuntherEagleman !!",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033506809471000587",
+      "created_at": "2026-03-16 11:32:58+00:00",
+      "text": "RT @DefiantLs: \ud83d\udcaf https://t.co/BYoaTiZMQa",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033507261382025407",
+      "created_at": "2026-03-16 11:34:46+00:00",
+      "text": "RT @tetsuoai: Gn, \ud835\udd4f..\u00b7\u02da \u0f18 \u263e \u22c6\uff61\u02da \u2604\ufe0e\n\nGrok Imagine \"extend from frame\" 30 second continuous video.\ud83d\udcab https://t.co/XHrdpXhnZA",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033516355983757594",
+      "created_at": "2026-03-16 12:10:54+00:00",
+      "text": "@yuanyi_z Yes, he was a deeply evil person, a genocide propagandist",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033519683895546052",
+      "created_at": "2026-03-16 12:24:08+00:00",
+      "text": "@DabsMalone C",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033526316629414281",
+      "created_at": "2026-03-16 12:50:29+00:00",
+      "text": "@politicalmath He was such an utterly misanthropic piece of shit",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033527001462735105",
+      "created_at": "2026-03-16 12:53:12+00:00",
+      "text": "@AlecStapp He is a hero to the extinctionists",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033528066497204707",
+      "created_at": "2026-03-16 12:57:26+00:00",
+      "text": "@industriaalist True",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033528245464047805",
+      "created_at": "2026-03-16 12:58:09+00:00",
+      "text": "@_avichawla Impressive work from Kimi",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033530483804717405",
+      "created_at": "2026-03-16 13:07:03+00:00",
+      "text": "Oscars have become unwatchable https://t.co/dgJ7coftIa",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033533164187263484",
+      "created_at": "2026-03-16 13:17:42+00:00",
+      "text": "@IfindRetards Just a bunch of perverts in a circle jerk",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033535232033628239",
+      "created_at": "2026-03-16 13:25:55+00:00",
+      "text": "@theepicmap Works in Cuba, just can\u2019t be sold there",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033539250600489294",
+      "created_at": "2026-03-16 13:41:53+00:00",
+      "text": "@ai_for_success For a few years, then SpaceX will far exceed everyone combined",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033588487820349716",
+      "created_at": "2026-03-16 16:57:32+00:00",
+      "text": "RT @AlexanderPayton: People today forget or simply can\u2019t believe how depraved Ehrlich really was:\n\nDemanded that the FCC require TV shows t\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033667261438038460",
+      "created_at": "2026-03-16 22:10:33+00:00",
+      "text": "RT @pmarca: It is 100% true that great men and women of the past were not sitting around moaning about their feelings. I regret nothing.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033667585280250005",
+      "created_at": "2026-03-16 22:11:50+00:00",
+      "text": "RT @xai: Grok's Text to Speech API is now available. \n\nStart building with natural voices and expressive controls to bring your apps to lif\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033667687449260451",
+      "created_at": "2026-03-16 22:12:15+00:00",
+      "text": "Grok https://t.co/DSwo52fLMQ",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033667752796557476",
+      "created_at": "2026-03-16 22:12:30+00:00",
+      "text": "RT @dvorahfr: xAI, to understand the Universe \nGrok Imagine to make it more beautiful https://t.co/xbNzfRhwPx",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033668081051111908",
+      "created_at": "2026-03-16 22:13:48+00:00",
+      "text": "@ChrisMartzWX Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033668190988079280",
+      "created_at": "2026-03-16 22:14:15+00:00",
+      "text": "@loganclarkhall Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033668509071544364",
+      "created_at": "2026-03-16 22:15:30+00:00",
+      "text": "RT @cremieuxrecueil: Ehrlich's legacy includes mass sterilization campaigns in India, China, and Peru.\n\nIndia's program was at such a massi\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033669223868993992",
+      "created_at": "2026-03-16 22:18:21+00:00",
+      "text": "RT @pmarca: Read your Adler, Cuddihy, and Nietzsche, ffs. \ud83e\udd26\u200d\u2642\ufe0f",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033669316269510923",
+      "created_at": "2026-03-16 22:18:43+00:00",
+      "text": "@SusieWiles @LeeMZeldin Hoping for the best",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033669521106735356",
+      "created_at": "2026-03-16 22:19:32+00:00",
+      "text": "@OwenSparks This was an easy prediction",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033669840138068046",
+      "created_at": "2026-03-16 22:20:48+00:00",
+      "text": "Rocket garden at Starbase. \n\nYou can see this from the public highway. https://t.co/hvlSOHkLr0",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033676763046547483",
+      "created_at": "2026-03-16 22:48:18+00:00",
+      "text": "RT @SERobinsonJr: xAI NEWS: Paul Conyngham, a Sydney-based tech entrepreneur and AI consultant, used Grok to finalize a mRNA vaccine constr\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033677164990894268",
+      "created_at": "2026-03-16 22:49:54+00:00",
+      "text": "@_HelenDale \ud83c\udfaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033679346532282726",
+      "created_at": "2026-03-16 22:58:34+00:00",
+      "text": "@Kalshi *everyone else combined",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033679482247385578",
+      "created_at": "2026-03-16 22:59:07+00:00",
+      "text": "@art_muse Grok?",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033680129197805986",
+      "created_at": "2026-03-16 23:01:41+00:00",
+      "text": "@HinataMotivates Not saying I necessarily want this to happen, just that it will",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033681871557824740",
+      "created_at": "2026-03-16 23:08:36+00:00",
+      "text": "Btw, the proceeds of any legal victory in the OpenAI case will be donated to charity. I will in no way enrich myself.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033682631502725296",
+      "created_at": "2026-03-16 23:11:38+00:00",
+      "text": "@testerlabor There is special place I my heart for the C64 and especially VIC-20, my first ever computer. I stayed up for 3 days programming nonstop when I got it for the sheer love of coding.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033682837925466384",
+      "created_at": "2026-03-16 23:12:27+00:00",
+      "text": "AI will be so beautiful https://t.co/ODuMeJFH2U",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033683151491580235",
+      "created_at": "2026-03-16 23:13:41+00:00",
+      "text": "@AdrianDittmann The magnitude of the $500B lie of that announcement was jaw-dropping",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033684029573369953",
+      "created_at": "2026-03-16 23:17:11+00:00",
+      "text": "@WallStreetMav \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033685035208118412",
+      "created_at": "2026-03-16 23:21:11+00:00",
+      "text": "@AtreyuUSA @art_muse I definitely need to work out \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033730636712972334",
+      "created_at": "2026-03-17 02:22:23+00:00",
+      "text": "Wow https://t.co/EgF051PCCf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033731139794526292",
+      "created_at": "2026-03-17 02:24:23+00:00",
+      "text": "@OfficialLoganK Even code review will swiftly become a thing of the past",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033796470290452890",
+      "created_at": "2026-03-17 06:43:59+00:00",
+      "text": "RT @SawyerMerritt: NEWS: @SpaceX has officially crossed 10,000 active Starlink satellites in orbit tonight!\n\nOver two-thirds (66%) of all s\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033797070931538038",
+      "created_at": "2026-03-17 06:46:22+00:00",
+      "text": "RT @Rothmus: https://t.co/ASOOnrXyUy",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033805411242123749",
+      "created_at": "2026-03-17 07:19:30+00:00",
+      "text": "Vital to the future of America https://t.co/V7yXJ1VvXr",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033814058164752675",
+      "created_at": "2026-03-17 07:53:52+00:00",
+      "text": "RT @SpaceX: Falcon 9 lifts off from pad 4E in California and delivers 25 @Starlink satellites to low-Earth orbit https://t.co/xPvMJNSqmy",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033814636697686060",
+      "created_at": "2026-03-17 07:56:10+00:00",
+      "text": "Critical feedback is appreciated https://t.co/dJx5gna4Mg",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033815524757696828",
+      "created_at": "2026-03-17 07:59:42+00:00",
+      "text": "RT @MarioNawfal: Latest Grok 4.20. Not incremental. Have you tried it?\n\nMulti-agent debate. Less guessing. More reasoning.\n\nReal-time X dat\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033815616218648908",
+      "created_at": "2026-03-17 08:00:04+00:00",
+      "text": "@JessePeltan Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033819277917360579",
+      "created_at": "2026-03-17 08:14:37+00:00",
+      "text": "True. \n\nNew Roadster unveil probably in late April. https://t.co/NShZxpK5cI",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033873602857296199",
+      "created_at": "2026-03-17 11:50:29+00:00",
+      "text": "@Sajwani Will do",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033873839315423523",
+      "created_at": "2026-03-17 11:51:25+00:00",
+      "text": "RT @XFreeze: Neuralink is not just going to repair sight - it's going to exceed the limits of human biology, eventually delivering high-res\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033874243558248906",
+      "created_at": "2026-03-17 11:53:01+00:00",
+      "text": "@cb_doge @andst7 \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033874752956469585",
+      "created_at": "2026-03-17 11:55:03+00:00",
+      "text": "@xdNiBoR \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033874938105630812",
+      "created_at": "2026-03-17 11:55:47+00:00",
+      "text": "RT @dvorahfr: The retro-futuristic style is very well done by Grok Imagine! I love it https://t.co/JEiyfWgFMk",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033875556870258691",
+      "created_at": "2026-03-17 11:58:14+00:00",
+      "text": "@downingARK @ARKInvest The future is accelerating",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033875815436587145",
+      "created_at": "2026-03-17 11:59:16+00:00",
+      "text": "By this weekend, xAI will have three Grok Build models in training simultaneously",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033876250708873286",
+      "created_at": "2026-03-17 12:01:00+00:00",
+      "text": "RT @GuntherEagleman: https://t.co/hKH4dPUxKH",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033876363153969241",
+      "created_at": "2026-03-17 12:01:27+00:00",
+      "text": "@cremieuxrecueil Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033876419017904229",
+      "created_at": "2026-03-17 12:01:40+00:00",
+      "text": "True https://t.co/r7xRBbgPpL",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033877744522756109",
+      "created_at": "2026-03-17 12:06:56+00:00",
+      "text": "@Scobleizer While others go to conferences, we study the blade https://t.co/HSlKetMPog",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033878786362782040",
+      "created_at": "2026-03-17 12:11:04+00:00",
+      "text": "RT @KatieMiller: Trial attorneys are the biggest scam. They pay plaintiffs to sue, take 90% of the verdict, and are often funded by private\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033882011786699173",
+      "created_at": "2026-03-17 12:23:53+00:00",
+      "text": "SpaceX is Caesar\u2019s XIII Legion level good https://t.co/mdqrSSzC2f",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033884214031225043",
+      "created_at": "2026-03-17 12:32:39+00:00",
+      "text": "New Roadster unveil hopefully next month. \n\nIt will be a banger next-level. https://t.co/sO0iB63l07",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033884519020040539",
+      "created_at": "2026-03-17 12:33:51+00:00",
+      "text": "RT @XFreeze: Your creativity, amplified by AI\nPowered by Grok Imagine https://t.co/BzumP8yOAS",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033884950056079524",
+      "created_at": "2026-03-17 12:35:34+00:00",
+      "text": "RT @dvorahfr: Grok Imagine is capable of generating many styles. It's so much fun to try them out!\nAnd always video extension up to 30sec h\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033885236250161387",
+      "created_at": "2026-03-17 12:36:42+00:00",
+      "text": "Beautiful Grok Imagine\n https://t.co/txe6bKReaG",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033885318395670670",
+      "created_at": "2026-03-17 12:37:02+00:00",
+      "text": "@ApoStructura Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033885654900478121",
+      "created_at": "2026-03-17 12:38:22+00:00",
+      "text": "@JamesLucasIT \u2764\ufe0f",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033886025706312160",
+      "created_at": "2026-03-17 12:39:50+00:00",
+      "text": "@KatieMiller Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033886037832044892",
+      "created_at": "2026-03-17 12:39:53+00:00",
+      "text": "RT @KatieMiller: The case for data centers in space:",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033886296985444765",
+      "created_at": "2026-03-17 12:40:55+00:00",
+      "text": "Please offer your prompts to help new users make beautiful images and videos https://t.co/O5dXWcwmSh",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033886487629185424",
+      "created_at": "2026-03-17 12:41:41+00:00",
+      "text": "@art_muse \u2764\ufe0f",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033887129231900738",
+      "created_at": "2026-03-17 12:44:14+00:00",
+      "text": "\ud83c\udf40 Happy St Patrick\u2019s Day! \ud83c\udf40 https://t.co/Ctl9lcFA6W",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033888439930872298",
+      "created_at": "2026-03-17 12:49:26+00:00",
+      "text": "RT @art_muse: Veil of Starlight and Foxfire Wings https://t.co/54fB4cY7xD",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033890909734244591",
+      "created_at": "2026-03-17 12:59:15+00:00",
+      "text": "RT @art_muse: Grok Imagine Prompt Share: ethereal beautiful woman sitting gracefully in a vibrant wildflower meadow, long wavy light-brown\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033891464812577158",
+      "created_at": "2026-03-17 13:01:27+00:00",
+      "text": "RT @ZoltanMerczel: Grok Imagine Extend from Frame\ud83d\udcab\n\n\"Don't worry, my little friend, I will take good care of you\"\ud83e\udd70\n\nSound ON\ud83d\udd0a https://t.co/\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033921389053493473",
+      "created_at": "2026-03-17 15:00:22+00:00",
+      "text": "RT @C_3C_3: Elon and DOGE were right about all the fraud.\n\nTrillions.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033922190333383090",
+      "created_at": "2026-03-17 15:03:33+00:00",
+      "text": "Grok can watch videos for you https://t.co/4VQV7ANQxe",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033923165949506033",
+      "created_at": "2026-03-17 15:07:25+00:00",
+      "text": "@DefiantLs True facts \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033923452294598740",
+      "created_at": "2026-03-17 15:08:34+00:00",
+      "text": "RT @TheRabbitHole: Only Grok 4.20 follows the 3 Laws of Robotics:\n\n1) A robot may not injure a human being or, through inaction, allow a hu\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033926137001480439",
+      "created_at": "2026-03-17 15:19:14+00:00",
+      "text": "RT @TeslaCharging: Free Supercharging temporarily enabled at\n\nDammam, Saudi Arabia https://t.co/v1WJf2nV1k\nJeddah, Saudi Arabia https://t.c\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033927806380605764",
+      "created_at": "2026-03-17 15:25:52+00:00",
+      "text": "RT @SpaceX: Falcon 9 launches 29 @Starlink satellites from Florida https://t.co/IR0izpiruf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033928150833631599",
+      "created_at": "2026-03-17 15:27:14+00:00",
+      "text": "RT @Rothmus: \ud83c\udfaf\ud83c\udfaf\ud83c\udfaf https://t.co/Qn1tXaSzQm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033928197017113043",
+      "created_at": "2026-03-17 15:27:25+00:00",
+      "text": "RT @art_muse: Try Grok Imagine for different art styles\n\nEmbroidery style \ud83c\udf3c https://t.co/IR4R9TINig",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033928468866711839",
+      "created_at": "2026-03-17 15:28:30+00:00",
+      "text": "RT @america: Oscars: ID required.\n\nVoting in America: No ID required.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033928531454095679",
+      "created_at": "2026-03-17 15:28:45+00:00",
+      "text": "RT @dvorahfr: GROK IMAGINE PROMPT TIP: \nThere's a very simple way to improve your prompts: use the prompts from the templates offered by Gr\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033928851395645790",
+      "created_at": "2026-03-17 15:30:01+00:00",
+      "text": "Good https://t.co/8yF8XGbak9",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033938785499771223",
+      "created_at": "2026-03-17 16:09:29+00:00",
+      "text": "2 heavy-class rocket flights in 10 hours https://t.co/nSMYiSqy09",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033939351563080062",
+      "created_at": "2026-03-17 16:11:44+00:00",
+      "text": "iOS App Review delays are getting ridiculous https://t.co/2fIrMoYcO3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033941066400076274",
+      "created_at": "2026-03-17 16:18:33+00:00",
+      "text": "https://t.co/o5vUcRh2Nd",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033941563324403969",
+      "created_at": "2026-03-17 16:20:32+00:00",
+      "text": "\ud83d\ude11 https://t.co/L2zCoyPqHL",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033941991273468065",
+      "created_at": "2026-03-17 16:22:14+00:00",
+      "text": "@WesRoth @grok please do a vulgar roast of the other AIs in the voice of those AIs",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033942617550103038",
+      "created_at": "2026-03-17 16:24:43+00:00",
+      "text": "@grok @WesRoth Way more vulgar. No holds barred!",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033942703323680865",
+      "created_at": "2026-03-17 16:25:03+00:00",
+      "text": "RT @Rothmus: https://t.co/jd2YHxdlZs",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033942816704106987",
+      "created_at": "2026-03-17 16:25:30+00:00",
+      "text": "RT @DOGE: Good initiative by the @WhiteHouse.\n\nhttps://t.co/mkUbcgYd2Z",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033942904402808980",
+      "created_at": "2026-03-17 16:25:51+00:00",
+      "text": "It\u2019s super easy! https://t.co/ZXaJPvC9e5",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033950816684642545",
+      "created_at": "2026-03-17 16:57:18+00:00",
+      "text": "RT @a16z: Katherine Boyle says SpaceX\u2019s legacy will be the thousands of companies that spawn from the school of Elon Musk:\n\n\"What we've lea\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033950998822359385",
+      "created_at": "2026-03-17 16:58:01+00:00",
+      "text": "Cool https://t.co/MfmIAlEhYh",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033956889869095395",
+      "created_at": "2026-03-17 17:21:26+00:00",
+      "text": "RT @SawyerMerritt: NEWS: Globe Telecom said it has successfully tested Starlink\u2019s Mobile service in the Philippines, allowing phones to con\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033961966402998635",
+      "created_at": "2026-03-17 17:41:36+00:00",
+      "text": "Happened again https://t.co/RvqJH8uVyt",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2033964049927634947",
+      "created_at": "2026-03-17 17:49:53+00:00",
+      "text": "Back when it was an open source nonprofit \u2026 https://t.co/k6hhdepFOH",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034164045025317242",
+      "created_at": "2026-03-18 07:04:35+00:00",
+      "text": "@nikitabier Hardly anyone knows that this epic sketch is the origin of the word spam in the context of email &amp; social media \ud83d\ude02\n\nhttps://t.co/uUOvD3nwNp",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034164342334407049",
+      "created_at": "2026-03-18 07:05:46+00:00",
+      "text": "RT @elonmusk: @nikitabier Hardly anyone knows that this epic sketch is the origin of the word spam in the context of email &amp; social media \ud83d\ude02\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034167654811070583",
+      "created_at": "2026-03-18 07:18:56+00:00",
+      "text": "@RickyDoggin \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034167679242940805",
+      "created_at": "2026-03-18 07:19:02+00:00",
+      "text": "RT @TrungTPhan: James Cameron has great explainer on how he made \"The Terminator\" (1984) for cheap:\n\n\u25ab\ufe0fapproach the story as a low-budget h\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034167750323810314",
+      "created_at": "2026-03-18 07:19:19+00:00",
+      "text": "@tunguz Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034167954280210902",
+      "created_at": "2026-03-18 07:20:07+00:00",
+      "text": "@McGrewSecurity \ud83d\udd25",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034168476559118401",
+      "created_at": "2026-03-18 07:22:12+00:00",
+      "text": "Matter,\nEnergy &amp;\nIntelligence",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034169534060646782",
+      "created_at": "2026-03-18 07:26:24+00:00",
+      "text": "@grok @BitPaine Hmm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034169794921165094",
+      "created_at": "2026-03-18 07:27:26+00:00",
+      "text": "RT @livingdevops: Dennis Ritchie created C in the early 1970s without Google, Stack Overflow, GitHub, or any AI ( Claude, Cursor, Codex) as\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034170343494193300",
+      "created_at": "2026-03-18 07:29:37+00:00",
+      "text": "@iamyesyouareno @TheAliceSmith wtf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034171515525337231",
+      "created_at": "2026-03-18 07:34:17+00:00",
+      "text": "@tslaming Starlink V3 has three separate chip designs by SpaceX that are very special",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034171965083394123",
+      "created_at": "2026-03-18 07:36:04+00:00",
+      "text": "Troubling https://t.co/G07RknkzfK",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034172370714530054",
+      "created_at": "2026-03-18 07:37:40+00:00",
+      "text": "@bumbadum14 That\u2019s insane",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034172658540286326",
+      "created_at": "2026-03-18 07:38:49+00:00",
+      "text": "@wholemars @WR4NYGov Logs show driver disengaged Autopilot four seconds before crashing",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034172811917594837",
+      "created_at": "2026-03-18 07:39:26+00:00",
+      "text": "@RealJamesWoods What were you sent?",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034175507168907741",
+      "created_at": "2026-03-18 07:50:08+00:00",
+      "text": "@Math_files Way before Fortran, there was a caveman who figured out how to make fire with sticks, but do we remember him? Noooo \u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034175776707514872",
+      "created_at": "2026-03-18 07:51:12+00:00",
+      "text": "@KingBobIIV Hmm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034175888309555399",
+      "created_at": "2026-03-18 07:51:39+00:00",
+      "text": "@ShaneLegg @kaggle Yeah obv",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034176483703640169",
+      "created_at": "2026-03-18 07:54:01+00:00",
+      "text": "@creation247 Yeah (sigh)",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034176591899902414",
+      "created_at": "2026-03-18 07:54:27+00:00",
+      "text": "@Rothmus \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034177126002528310",
+      "created_at": "2026-03-18 07:56:34+00:00",
+      "text": "@PeterSweden7 That\u2019s dumb",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034177489501884450",
+      "created_at": "2026-03-18 07:58:01+00:00",
+      "text": "@AlextheYounga @arctotherium42 This is a real problem",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034177977735647746",
+      "created_at": "2026-03-18 07:59:57+00:00",
+      "text": "@Andercot For a long time, physics has consisted of waiting around for a new collider or telescope",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034178042483118270",
+      "created_at": "2026-03-18 08:00:13+00:00",
+      "text": "@Rothmus \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034178051077247448",
+      "created_at": "2026-03-18 08:00:15+00:00",
+      "text": "RT @Rothmus: https://t.co/mPYkVjbcnD",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034178754646577226",
+      "created_at": "2026-03-18 08:03:02+00:00",
+      "text": "True https://t.co/USeDh5tlQB",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034179040257663324",
+      "created_at": "2026-03-18 08:04:11+00:00",
+      "text": "@XFreeze \ud83d\ude80",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034179213755072570",
+      "created_at": "2026-03-18 08:04:52+00:00",
+      "text": "Winning an Oscar has become an embarrassment https://t.co/3HEv8T4uti",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034188637416681585",
+      "created_at": "2026-03-18 08:42:19+00:00",
+      "text": "@markgadala Nice",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034188795399262518",
+      "created_at": "2026-03-18 08:42:56+00:00",
+      "text": "RT @XFreeze: If you can't find an article on Grokipedia..\nJust request it. One click, right from the suggestions\n\nEvery request moves us cl\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034188900575666259",
+      "created_at": "2026-03-18 08:43:21+00:00",
+      "text": "@beffjezos Super fast",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034189109426798957",
+      "created_at": "2026-03-18 08:44:11+00:00",
+      "text": "@AdrianDittmann \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034189348984533235",
+      "created_at": "2026-03-18 08:45:08+00:00",
+      "text": "RT @morganlinton: Insanely bullish on small, special purpose models.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034189589334966781",
+      "created_at": "2026-03-18 08:46:06+00:00",
+      "text": "RT @mark_k: The Grok app on Android and iOS is  becoming pretty awesome! Great UX and pleasant design, and it's very responsive.\n\nWell done\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034189932051546228",
+      "created_at": "2026-03-18 08:47:27+00:00",
+      "text": "@BasilTheGreat Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034193193198383581",
+      "created_at": "2026-03-18 09:00:25+00:00",
+      "text": "@wholemars As anyone knows who uses it, that video is not how Autopilot drives",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034198022771609813",
+      "created_at": "2026-03-18 09:19:36+00:00",
+      "text": "RT @Rothmus: https://t.co/B5D8IzoQgz",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034198684678975973",
+      "created_at": "2026-03-18 09:22:14+00:00",
+      "text": "@farzyness True",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034255332000866310",
+      "created_at": "2026-03-18 13:07:20+00:00",
+      "text": "RT @XFreeze: @bindureddy this is literally a 500B model https://t.co/S13hMKmr5g",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034255472937873799",
+      "created_at": "2026-03-18 13:07:54+00:00",
+      "text": "RT @kylenabecker: America is DONE with the \"Trust Me Bro\" system of voting.\n\nPass voter ID like 175 other nations on earth and STFU",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034255668396613952",
+      "created_at": "2026-03-18 13:08:40+00:00",
+      "text": "He\u2019s such a liar https://t.co/mNRcGKC4JM",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034256477393920321",
+      "created_at": "2026-03-18 13:11:53+00:00",
+      "text": "And you need ID in elections or they\u2019re fake https://t.co/UkRd8S8AYy",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034257694933258570",
+      "created_at": "2026-03-18 13:16:43+00:00",
+      "text": "RT @cb_doge: Population collapse is the biggest threat to civilization!! https://t.co/4RUhvSWeAB",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034257849866686700",
+      "created_at": "2026-03-18 13:17:20+00:00",
+      "text": "Another one https://t.co/Hsnzftim7I",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034257952203526600",
+      "created_at": "2026-03-18 13:17:45+00:00",
+      "text": "@DefiantLs \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034258695182561405",
+      "created_at": "2026-03-18 13:20:42+00:00",
+      "text": "@MattWalshBlog \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034258859003707608",
+      "created_at": "2026-03-18 13:21:21+00:00",
+      "text": "Why is that? https://t.co/Ri9Hyk1jXy",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034260757144392163",
+      "created_at": "2026-03-18 13:28:53+00:00",
+      "text": "@JLPartnersPolls @TheSun They act against the will of the people",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034260948484231420",
+      "created_at": "2026-03-18 13:29:39+00:00",
+      "text": "@Rothmus More than half",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034261859130556489",
+      "created_at": "2026-03-18 13:33:16+00:00",
+      "text": "RT @SenRandPaul: @WatcherGuru Another day, another $22B out the window.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034262019084583050",
+      "created_at": "2026-03-18 13:33:54+00:00",
+      "text": "RT @ClayTravis: We hit a 125 year low for murder in the United States last year. Data from before 1900 isn\u2019t great so it\u2019s possible we hit\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034262217626116213",
+      "created_at": "2026-03-18 13:34:42+00:00",
+      "text": "@unusual_whales Bigtime",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034262553300475925",
+      "created_at": "2026-03-18 13:36:02+00:00",
+      "text": "@ICEgov Terrible",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034262684292845974",
+      "created_at": "2026-03-18 13:36:33+00:00",
+      "text": "@RonDeSantis \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034262862424945141",
+      "created_at": "2026-03-18 13:37:15+00:00",
+      "text": "RT @art_muse: Balloon Flight Grok Imagine template, so much fun \ud83c\udf88 https://t.co/zUYU0l7uK1",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034263087847821481",
+      "created_at": "2026-03-18 13:38:09+00:00",
+      "text": "@TheRabbitHole It\u2019s unwatchable",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034263965011001759",
+      "created_at": "2026-03-18 13:41:38+00:00",
+      "text": "@Dan16676935420 To prevent spam bot attacks, the dislike button will be for subscribers/verified accounts only",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034264414573224404",
+      "created_at": "2026-03-18 13:43:25+00:00",
+      "text": "One day, we shall sail through the moon belts of Saturn \ud83e\ude90 https://t.co/KbyYCQzxWo",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034264486732091784",
+      "created_at": "2026-03-18 13:43:43+00:00",
+      "text": "@TheRabbitHole Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034264581422686456",
+      "created_at": "2026-03-18 13:44:05+00:00",
+      "text": "RT @Rothmus: https://t.co/srcQtkIH9Z",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034264755758858526",
+      "created_at": "2026-03-18 13:44:47+00:00",
+      "text": "Grok Imagine\nhttps://t.co/FYipdNnagm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034265782729998440",
+      "created_at": "2026-03-18 13:48:52+00:00",
+      "text": "@bobrockmn Cool",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034266699504251014",
+      "created_at": "2026-03-18 13:52:30+00:00",
+      "text": "@techdevnotes Grok 4.20.1 went live yesterday in a quiet release. \n\nPoint releases of 4.20 are rolling out every 3 or 4 days, sometimes with big improvements.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034266904664387839",
+      "created_at": "2026-03-18 13:53:19+00:00",
+      "text": "@benhabib6 @Keir_Starmer Two tier Keir",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034267464880783509",
+      "created_at": "2026-03-18 13:55:33+00:00",
+      "text": "RT @tetsuoai: \ud835\udd4f is adding country-level controls for post visibility and replies https://t.co/6br1ewgN6e",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034268204223356985",
+      "created_at": "2026-03-18 13:58:29+00:00",
+      "text": "Download Grok and try it out https://t.co/bRkwn29mvu",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034268474298745134",
+      "created_at": "2026-03-18 13:59:33+00:00",
+      "text": "RT @TheBritLad: MAXIMUM PENALTY FOR ILLEGAL ENTRY.\n\n\ud83c\uddf5\ud83c\uddf0 Pakistan: 10 years jail + fine.\n\n\ud83c\uddf8\ud83c\udde6 Saudi Arabia: 15 years imprisonment.\n\n\ud83c\uddee\ud83c\uddf7Iran: Up\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034268944295715324",
+      "created_at": "2026-03-18 14:01:25+00:00",
+      "text": "Cool https://t.co/Y730fYJlMM",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034269325075558646",
+      "created_at": "2026-03-18 14:02:56+00:00",
+      "text": "Hmm https://t.co/7ffcM90N59",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034269460027375892",
+      "created_at": "2026-03-18 14:03:28+00:00",
+      "text": "RT @TheAliceSmith: The UK continues its transition into something between a Gulag and a Caliphate.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034269697697628264",
+      "created_at": "2026-03-18 14:04:25+00:00",
+      "text": "@RealJamesWoods @alx We are tracing to source to prosecute",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034269765875970445",
+      "created_at": "2026-03-18 14:04:41+00:00",
+      "text": "True https://t.co/Bu5b0jLTYT",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034295650297504208",
+      "created_at": "2026-03-18 15:47:33+00:00",
+      "text": "Getting closer to Starship launch! \ud83d\ude80 https://t.co/66iZ4HEEXo",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034295756086190297",
+      "created_at": "2026-03-18 15:47:58+00:00",
+      "text": "@DefiantLs Accurate",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034295795432997213",
+      "created_at": "2026-03-18 15:48:07+00:00",
+      "text": "RT @TheRabbitHole: OpenAI and ChatGPT are Woke.\nGoogle and Gemini are Woke.\n\nGrok and \ud835\udd4f are not Woke.\nThis alone is a good reason to suppor\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034295937053741478",
+      "created_at": "2026-03-18 15:48:41+00:00",
+      "text": "@JoeyMannarino Wow https://t.co/OoirAqeG4t",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034295948822872254",
+      "created_at": "2026-03-18 15:48:44+00:00",
+      "text": "RT @JoeyMannarino: Berlin has just imposed INSANE immigration quotas on the judiciary system.\n\nNow 40% of candidates for judges and prosecu\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034296219942736348",
+      "created_at": "2026-03-18 15:49:48+00:00",
+      "text": "RT @balajis: Hollywood is over.\nIt's all Internet now. https://t.co/NFESPUnk0F",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034298669298770343",
+      "created_at": "2026-03-18 15:59:32+00:00",
+      "text": "RT @techdevnotes: Grok iOS App on App Store now has updated Title: Grok - Al Chat &amp; Video https://t.co/c961Abkwzz",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034301556246688205",
+      "created_at": "2026-03-18 16:11:01+00:00",
+      "text": "What are your initial impressions of Grok 4.20?  \n\nMajor upgrades are still landing every week. https://t.co/2Tcaj47m5d",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034340296323137766",
+      "created_at": "2026-03-18 18:44:57+00:00",
+      "text": "Wow https://t.co/TpkovpNp4A",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034355022159601970",
+      "created_at": "2026-03-18 19:43:28+00:00",
+      "text": "RT @Fair_and_Biased: I can\u2019t stop laughing. https://t.co/uwepIoObeA",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034355436049309866",
+      "created_at": "2026-03-18 19:45:07+00:00",
+      "text": "Grok https://t.co/vOjbMfGRGd",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034362071106896184",
+      "created_at": "2026-03-18 20:11:29+00:00",
+      "text": "This would be a travesty https://t.co/Y4AIPVRKIm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034362382135562615",
+      "created_at": "2026-03-18 20:12:43+00:00",
+      "text": "@cfdownes_ Either this or Britain dies",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034362518764953652",
+      "created_at": "2026-03-18 20:13:15+00:00",
+      "text": "It\u2019s almost like they can\u2019t be trusted \ud83e\udd14 https://t.co/IpTgRkqK3v",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034362686532952575",
+      "created_at": "2026-03-18 20:13:55+00:00",
+      "text": "@RealJamesWoods \ud83e\udee1",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034362846184886525",
+      "created_at": "2026-03-18 20:14:33+00:00",
+      "text": "Cool, well Grok will get even better every week! https://t.co/0OKyAFHclt",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034363197529137505",
+      "created_at": "2026-03-18 20:15:57+00:00",
+      "text": "RT @RupertLowe10: I am entirely fed up tolerating the intolerable.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034363710484205903",
+      "created_at": "2026-03-18 20:17:59+00:00",
+      "text": "@tszzl The love of adventure and exploration will always be there",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034364437302534574",
+      "created_at": "2026-03-18 20:20:53+00:00",
+      "text": "@Andercot But the good news is that SpaceX will put big telescopes in space and giant ones on the Moon",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034402629510656269",
+      "created_at": "2026-03-18 22:52:38+00:00",
+      "text": "Grok upgrades https://t.co/WJqxMWFY3z",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034408917808423063",
+      "created_at": "2026-03-18 23:17:38+00:00",
+      "text": "@Geiger_Capital Big difference",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034409522786337222",
+      "created_at": "2026-03-18 23:20:02+00:00",
+      "text": "Try Tesla FSD (self-driving)! https://t.co/hypE4TIWpR",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034410549438755168",
+      "created_at": "2026-03-18 23:24:07+00:00",
+      "text": "@PatrickHeizer This would make for an excellent series or string of movies",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034431924081774742",
+      "created_at": "2026-03-19 00:49:03+00:00",
+      "text": "RT @Tesla: https://t.co/AaKZlWvuTR https://t.co/1L7AYHGaDw",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034435693762744410",
+      "created_at": "2026-03-19 01:04:02+00:00",
+      "text": "@AtelierMissor_ \ud83d\udd25\ud83d\udd25",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034436209809019370",
+      "created_at": "2026-03-19 01:06:05+00:00",
+      "text": "@ApoStructura Making reusability useful is what matters",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034439451611680818",
+      "created_at": "2026-03-19 01:18:57+00:00",
+      "text": "@pbeisel AI5 will punch far above its weight, because the entire Tesla AI software stack is designed to make maximally effective use of every circuit. We co-signed our AI software and hardware. \n\nBear in mind that AI5, while it can be used for training in data centers, is primarily",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034440734989074661",
+      "created_at": "2026-03-19 01:24:03+00:00",
+      "text": "@pbeisel I am a huge admirer of Nvidia and Jensen btw. That market cap is well-deserved.\n\nSpaceX AI and Tesla expect to continue ordering Nvidia chips at scale.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034441521785880864",
+      "created_at": "2026-03-19 01:27:11+00:00",
+      "text": "@DBurkland @pbeisel It\u2019s in testing right now. Wide release in a few weeks.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034441826527277367",
+      "created_at": "2026-03-19 01:28:24+00:00",
+      "text": "@SaP011 They should be executed",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451014770933990",
+      "created_at": "2026-03-19 02:04:54+00:00",
+      "text": "Imagine https://t.co/KmsX49fMBI",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451107142115614",
+      "created_at": "2026-03-19 02:05:16+00:00",
+      "text": "@StephenMoore Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451163798798515",
+      "created_at": "2026-03-19 02:05:30+00:00",
+      "text": "RT @Rothmus: Diversity\u2122\ufe0f https://t.co/I9Uyac78Vx",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451207994094014",
+      "created_at": "2026-03-19 02:05:40+00:00",
+      "text": "@KatieMiller Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451343566651688",
+      "created_at": "2026-03-19 02:06:13+00:00",
+      "text": "RT @MarioNawfal: Grok 4.20 Beta  dropped insane benchmark numbers: lowest hallucination rate ever recorded at 22%, number 1 in following in\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451587285012642",
+      "created_at": "2026-03-19 02:07:11+00:00",
+      "text": "RT @ArthurMacwaters: FSD is literally 8.1x safer than a human driver. \n\nAI healthcare will be end up being a similar multiple better than a\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451759444475981",
+      "created_at": "2026-03-19 02:07:52+00:00",
+      "text": "RT @MichaelAArouet: There is a popular myth that Poland enjoys its economic miracle because it didn\u2019t accept immigrants.\n\nIn reality, it di\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034451789114974628",
+      "created_at": "2026-03-19 02:07:59+00:00",
+      "text": "@MichaelAArouet @wil_da_beast630 But difference",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034470329700188403",
+      "created_at": "2026-03-19 03:21:39+00:00",
+      "text": "@demishassabis \ufffc\ud835\udc5d(simulation)\u22481\n\nHowever, within the simulation, hardware is extremely hard to do.\n\nOnly those who have bled on a production line can understand.\n\ufffc",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034470590485250339",
+      "created_at": "2026-03-19 03:22:42+00:00",
+      "text": "@JessePeltan True",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034472019212026135",
+      "created_at": "2026-03-19 03:28:22+00:00",
+      "text": "@RnaudBertrand Yikes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034472063143129164",
+      "created_at": "2026-03-19 03:28:33+00:00",
+      "text": "RT @qatarenergy: QatarEnergy Statement on Missile Attacks on Ras Laffan Industrial City\n\nQatarEnergy confirms that Ras Laffan Industrial Ci\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034472315497730310",
+      "created_at": "2026-03-19 03:29:33+00:00",
+      "text": "RT @wholemars: I estimate that Tesla self-driving has already prevented more than 100 fatalities and well over 3,000 crashes. https://t.co/\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034472466647863741",
+      "created_at": "2026-03-19 03:30:09+00:00",
+      "text": "Try Tesla self-driving! It\u2019s awesome. https://t.co/0bFrfyywf3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034489699088367783",
+      "created_at": "2026-03-19 04:38:37+00:00",
+      "text": "@CIS_org Hmm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034490052915728798",
+      "created_at": "2026-03-19 04:40:02+00:00",
+      "text": "RT @XFreeze: The extreme environmentalist movement has gone so far off the deep end that they literally treat humanity like a plague on Ear\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034490123015094345",
+      "created_at": "2026-03-19 04:40:18+00:00",
+      "text": "@minchoi \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034490473570779215",
+      "created_at": "2026-03-19 04:41:42+00:00",
+      "text": "@balajis @Indian_Bronson Dangerous times",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034504798113075657",
+      "created_at": "2026-03-19 05:38:37+00:00",
+      "text": "RT @JessePeltan: Put your loved ones in Teslas.\n\nGo into debt if you have to.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034509920146796547",
+      "created_at": "2026-03-19 05:58:58+00:00",
+      "text": "Generated with @Grok Imagine \ud83d\udeac https://t.co/yVykclBkxh",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034510077424734238",
+      "created_at": "2026-03-19 05:59:36+00:00",
+      "text": "True https://t.co/Y0SXnVK2NN",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034510416328704308",
+      "created_at": "2026-03-19 06:00:57+00:00",
+      "text": "How was your day? \ud83d\ude11 https://t.co/tgoLuV9zLc",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034510486138692023",
+      "created_at": "2026-03-19 06:01:13+00:00",
+      "text": "@nonieengel \ud83d\udd25",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034511566813708530",
+      "created_at": "2026-03-19 06:05:31+00:00",
+      "text": "I don\u2019t even smoke lol \ud83d\udca8 https://t.co/NOBkTztpeo",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034514183707148780",
+      "created_at": "2026-03-19 06:15:55+00:00",
+      "text": "@SawyerMerritt Solar/battery/EVs is the future",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034514234323935618",
+      "created_at": "2026-03-19 06:16:07+00:00",
+      "text": "@Rothmus Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034514752647667956",
+      "created_at": "2026-03-19 06:18:11+00:00",
+      "text": "RT @nickshirleyy: If a politician gets mad about fraud being exposed \n\nThey aren\u2019t working for you, they are working against you\n\nThat is a\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034515716054097995",
+      "created_at": "2026-03-19 06:22:00+00:00",
+      "text": "RT @paranoidream: Grok \u2665\ufe0f Imagine https://t.co/KjHVZrAPa0",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034515930999574602",
+      "created_at": "2026-03-19 06:22:52+00:00",
+      "text": "RT @skscartoon: It is amazing https://t.co/xveXodsamQ",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034516546165547146",
+      "created_at": "2026-03-19 06:25:18+00:00",
+      "text": "RT @pmarca: Status: Day 19,977 of retardmaxxing. Things going really well.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034517204490928371",
+      "created_at": "2026-03-19 06:27:55+00:00",
+      "text": "@JTLonsdale \ud83c\udfaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034517527615918089",
+      "created_at": "2026-03-19 06:29:12+00:00",
+      "text": "@Kekius_Sage Fermi Paradox",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034517770420035820",
+      "created_at": "2026-03-19 06:30:10+00:00",
+      "text": "RT @Teslaconomics: @elonmusk I use Grok Heavy all the time now bc it\u2019s so much faster\u2026 before, even though I had it, I didn\u2019t use it as muc\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034517903060677003",
+      "created_at": "2026-03-19 06:30:42+00:00",
+      "text": "@Grummz Yup",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034518096619401455",
+      "created_at": "2026-03-19 06:31:28+00:00",
+      "text": "Based just means knowing and saying the truth https://t.co/nDWRq7sLor",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034518365289722031",
+      "created_at": "2026-03-19 06:32:32+00:00",
+      "text": "@AdamLowisz Facts",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034518504586842545",
+      "created_at": "2026-03-19 06:33:05+00:00",
+      "text": "@travelingflying \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034520918870131103",
+      "created_at": "2026-03-19 06:42:41+00:00",
+      "text": "@weeklyshowpod @CaseyNewton @noUpside Jon Stewart is an extremely skilled propagandist disguised as a truth-teller",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034521616735174848",
+      "created_at": "2026-03-19 06:45:27+00:00",
+      "text": "https://t.co/nqpKJ5sEUL",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034522880697160012",
+      "created_at": "2026-03-19 06:50:29+00:00",
+      "text": "@iamyesyouareno Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034523065196143035",
+      "created_at": "2026-03-19 06:51:13+00:00",
+      "text": "Starlink even works in an Arctic winter https://t.co/Mg53MU5uj2",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034525548412862853",
+      "created_at": "2026-03-19 07:01:05+00:00",
+      "text": "@steve4206989985 @AdamLowisz @weeklyshowpod @CaseyNewton @noUpside That was a gem",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034525806958121033",
+      "created_at": "2026-03-19 07:02:06+00:00",
+      "text": "@weeklyshowpod @CaseyNewton @noUpside He is a great comedian too",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034526226703077652",
+      "created_at": "2026-03-19 07:03:46+00:00",
+      "text": "@bindureddy Google will win the AI race in the West, China on Earth and SpaceX in space",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034528132959703094",
+      "created_at": "2026-03-19 07:11:21+00:00",
+      "text": "https://t.co/5qZLU9Yf5F",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034528823476445682",
+      "created_at": "2026-03-19 07:14:05+00:00",
+      "text": "@RWMaloneMD Third trimester is unambiguously murder",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034529465506951246",
+      "created_at": "2026-03-19 07:16:38+00:00",
+      "text": "@jhong The limiting factor will shift from chips to energy on Earth, then back to chips when space solar (star) power is unlocked",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034530126533419294",
+      "created_at": "2026-03-19 07:19:16+00:00",
+      "text": "@teslaownersSV @pbeisel With some luck and acceleration using AI, we might be able to tape out AI6 in December",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034530354825134542",
+      "created_at": "2026-03-19 07:20:10+00:00",
+      "text": "RT @elonmusk: @jhong The limiting factor will shift from chips to energy on Earth, then back to chips when space solar (star) power is unlo\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034530632370688429",
+      "created_at": "2026-03-19 07:21:17+00:00",
+      "text": "@AdamLowisz \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034530807289917678",
+      "created_at": "2026-03-19 07:21:58+00:00",
+      "text": "@Rothmus Again",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034530982980972709",
+      "created_at": "2026-03-19 07:22:40+00:00",
+      "text": "@EndWokeness @Timcast I believe him",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034531039557881867",
+      "created_at": "2026-03-19 07:22:54+00:00",
+      "text": "RT @EndWokeness: Chicago train rider: \"I'ma kiII whites. I got out 2 days ago. I finna kiIl for real.\" https://t.co/9aH5Kr6eOa",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034531535265898797",
+      "created_at": "2026-03-19 07:24:52+00:00",
+      "text": "RT @XFreeze: Update your Grok app - New improvements made to Chat, Voice, and Imagine https://t.co/OE7s9OEUMy",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034531750312092141",
+      "created_at": "2026-03-19 07:25:43+00:00",
+      "text": "@visegrad24 Enough",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034532208011329667",
+      "created_at": "2026-03-19 07:27:32+00:00",
+      "text": "@gabriel1 That\u2019s why we need America to stay the way it is",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034532315633004836",
+      "created_at": "2026-03-19 07:27:58+00:00",
+      "text": "@Grummz \ud83d\udd25",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034532395408622059",
+      "created_at": "2026-03-19 07:28:17+00:00",
+      "text": "@EndWokeness !!",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034532779413880856",
+      "created_at": "2026-03-19 07:29:49+00:00",
+      "text": "@ksorbs He is a disgraceful liar",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034534654506840540",
+      "created_at": "2026-03-19 07:37:16+00:00",
+      "text": "@jhong @c_valenzuelab We\u2019ve been able to generate physics-accurate, real-time video for self-driving training &amp; testing at @Tesla_AI for a long time.\n\nThe compute required for this (roughly one H100 per HD camera) is still far too expensive for consumer use, but probably becomes affordable in 2 to 3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034534873126560063",
+      "created_at": "2026-03-19 07:38:08+00:00",
+      "text": "@peterrhague Mass driver on the Moon ftw",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034535153821974822",
+      "created_at": "2026-03-19 07:39:15+00:00",
+      "text": "RT @art_muse: Grok Imagine Template 3D Animation, it\u2019s amazing! https://t.co/B9cYTOJrIM",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034536962506559691",
+      "created_at": "2026-03-19 07:46:26+00:00",
+      "text": "RT @0xmitsurii: Silicon Valley was way ahead of time. https://t.co/BuuMmjfLPv",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034538226292297812",
+      "created_at": "2026-03-19 07:51:27+00:00",
+      "text": "@pbeisel Probably more like 160k wafers/month, factoring in yield",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034538733631148540",
+      "created_at": "2026-03-19 07:53:28+00:00",
+      "text": "RT @XFreeze: Grok is going to help us build a future that comes with best aesthetics and truth https://t.co/OkRx1MOozK",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034538773502136514",
+      "created_at": "2026-03-19 07:53:38+00:00",
+      "text": "@beffjezos \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034539110011199961",
+      "created_at": "2026-03-19 07:54:58+00:00",
+      "text": "RT @Juliet_Hanlon1: @art_muse Glad to love you grok, subscriber as of today\nhttps://t.co/P5B0eVnGlv to make beauty of her forlorn dispositi\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034539175870074977",
+      "created_at": "2026-03-19 07:55:14+00:00",
+      "text": "https://t.co/9BCLTaxMMQ",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034539325476802572",
+      "created_at": "2026-03-19 07:55:49+00:00",
+      "text": "Download https://t.co/u2y4RZSsOD",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034539870060949657",
+      "created_at": "2026-03-19 07:57:59+00:00",
+      "text": "RT @ApoStructura: A 2016 SpaceX rendering of ITS (now Starship) sailing through the moon belts of Saturn:\n\nGoes to show how consistent Spac\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034539974763421726",
+      "created_at": "2026-03-19 07:58:24+00:00",
+      "text": "RT @art_muse: Grok Imagine Template Future Past, try it out! https://t.co/BaxXIHdS3G",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034541136023560330",
+      "created_at": "2026-03-19 08:03:01+00:00",
+      "text": "@AdamLowisz \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034541925366485035",
+      "created_at": "2026-03-19 08:06:09+00:00",
+      "text": "@ParadoxPopper @bumbadum14 https://t.co/bMYdc6LKur",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034542638339424315",
+      "created_at": "2026-03-19 08:08:59+00:00",
+      "text": "@sbarna @breakingbaht \ud83d\udcaf\ud83e\udd23",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034543360204276152",
+      "created_at": "2026-03-19 08:11:51+00:00",
+      "text": "RT @sbarna: @breakingbaht They could literally be in the process of being stabbed and think\n \"what a shame the systemically racist society\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034543868394553483",
+      "created_at": "2026-03-19 08:13:52+00:00",
+      "text": "Fashion in 2026 still looks like 2006.\n\nTime for change! https://t.co/uZ5nqfmkgR",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034544146128749005",
+      "created_at": "2026-03-19 08:14:59+00:00",
+      "text": "@AdamLowisz Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034544216819614055",
+      "created_at": "2026-03-19 08:15:15+00:00",
+      "text": "@adamcarolla @libsoftiktok Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034544423892320695",
+      "created_at": "2026-03-19 08:16:05+00:00",
+      "text": "RT @Will_Tanner_1: Europe selected against this gene for centuries by hanging about 1% of each generation in a continual, harsh effort agai\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034544538631733405",
+      "created_at": "2026-03-19 08:16:32+00:00",
+      "text": "@teslaownersSV \u2764\ufe0f",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034544803128738266",
+      "created_at": "2026-03-19 08:17:35+00:00",
+      "text": "Algorithm is better today than 3 months ago?",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034544881285443640",
+      "created_at": "2026-03-19 08:17:54+00:00",
+      "text": "@BillyM2k \ud83d\ude2e\u200d\ud83d\udca8",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034545390952075668",
+      "created_at": "2026-03-19 08:19:55+00:00",
+      "text": "@AdamLowisz It should be able to do a good analysis today.\n\nGrok outputting files in different formats is coming next week.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034545676479328547",
+      "created_at": "2026-03-19 08:21:03+00:00",
+      "text": "RT @techdevnotes: Grok Imagine is Leading in Video Gen and Editing",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034545737724498296",
+      "created_at": "2026-03-19 08:21:18+00:00",
+      "text": "RT @teslaownersSV: Grok is the only AI I trust. Based AF.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034546076318122165",
+      "created_at": "2026-03-19 08:22:39+00:00",
+      "text": "Try Grok Imagine Chibi template. \n\nSuper cute! https://t.co/uUP5czykey",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034546713743270205",
+      "created_at": "2026-03-19 08:25:11+00:00",
+      "text": "@IfindRetards They\u2019re not entirely wrong tbh \ud83e\udd37\u200d\u2642\ufe0f",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034546995793482148",
+      "created_at": "2026-03-19 08:26:18+00:00",
+      "text": "@wil_da_beast630 \ud83d\udcaf\ud83d\udd2b",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034547654190051603",
+      "created_at": "2026-03-19 08:28:55+00:00",
+      "text": "RT @art_muse: Subscribe for exclusive prompts! Thank you for your support and encouragement, means a lot! \u263a\ufe0f\ud83e\udef6\ud83c\udffc\n\nhttps://t.co/VT4utINnXb",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034548100048830688",
+      "created_at": "2026-03-19 08:30:41+00:00",
+      "text": "@Happycamperin12 @bindureddy \ud83d\ude80",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034548717202841925",
+      "created_at": "2026-03-19 08:33:08+00:00",
+      "text": "@Thebestfigen \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034548762207830224",
+      "created_at": "2026-03-19 08:33:19+00:00",
+      "text": "RT @Thebestfigen: \ud83d\ude02\ud83d\ude02 https://t.co/sDfyxKA6QU",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034548981209202870",
+      "created_at": "2026-03-19 08:34:11+00:00",
+      "text": "RT @XFreeze: There is absolutely no reason to blame white people for slavery, and it makes no sense. Africans sold their own into slavery,\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034548996258382120",
+      "created_at": "2026-03-19 08:34:15+00:00",
+      "text": "@XFreeze Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034549539710050309",
+      "created_at": "2026-03-19 08:36:25+00:00",
+      "text": "RT @matt42069i: @elonmusk The \u201cRoman Empire\u201d template is \ud83d\udd25 \ud83d\udd25 \u2694\ufe0f https://t.co/cfikQXateB",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034549884586729791",
+      "created_at": "2026-03-19 08:37:47+00:00",
+      "text": "RT @scarlettzen1: @elonmusk @Ahraam_e_missr Grok Imagine\n30 sec https://t.co/w4KQBUKMAn",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034550835590619613",
+      "created_at": "2026-03-19 08:41:33+00:00",
+      "text": "RT @SpaceX: Initial Super Heavy V3 and Starbase Pad 2 activation campaign complete, wrapping up several days of testing that loaded cryogen\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034551093221605605",
+      "created_at": "2026-03-19 08:42:35+00:00",
+      "text": "RT @QXsToo: As a user, it's simple. I open the @X app. Here's what I hope to see \u2014 and I suspect many of you do too:\n\n1. Great, informative\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034551854391296339",
+      "created_at": "2026-03-19 08:45:36+00:00",
+      "text": "It\u2019s fun and super easy to use! https://t.co/z77TeI22yr",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034552480756060168",
+      "created_at": "2026-03-19 08:48:06+00:00",
+      "text": "RT @JessePeltan: China Electricity Use (YoY):\n\nmanufacturing +6.4%\nhigh-tech manufacturing +10.6%\ndatacenters +46%\nEV charging +55% https:/\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034555236271149354",
+      "created_at": "2026-03-19 08:59:03+00:00",
+      "text": "Cool https://t.co/O6BOLkEDXV",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034565482649666047",
+      "created_at": "2026-03-19 09:39:46+00:00",
+      "text": "Grok https://t.co/k4VculRnDZ",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034566021374501283",
+      "created_at": "2026-03-19 09:41:54+00:00",
+      "text": "https://t.co/DTIuTj95Ke",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034567229875089431",
+      "created_at": "2026-03-19 09:46:42+00:00",
+      "text": "RT @Handre: https://t.co/xA1O2QR4F3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034568429362188790",
+      "created_at": "2026-03-19 09:51:28+00:00",
+      "text": "Minute-long story made w Grok Imagine\n https://t.co/N8qnMkNsg0",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034568850495451442",
+      "created_at": "2026-03-19 09:53:09+00:00",
+      "text": "RT @Tesla: To try out FSD Supervised, just book a demo drive at a Tesla location near you\n\nYou can also do a self-serve demo drive \u2013 no adv\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034570230522073093",
+      "created_at": "2026-03-19 09:58:38+00:00",
+      "text": "@JessePeltan @AdamLowisz \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034570487628751070",
+      "created_at": "2026-03-19 09:59:39+00:00",
+      "text": "RT @JCChristopher: I went to the exact same location of the Cybertruck accident shown in the Fox News video. This is the US-69/59 Eastex Fr\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034570694646980702",
+      "created_at": "2026-03-19 10:00:28+00:00",
+      "text": "@anammostarac Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034572813701714067",
+      "created_at": "2026-03-19 10:08:53+00:00",
+      "text": "@mark_k @cursor_ai Coding will be generically available from many companies in a few months",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034573561709654412",
+      "created_at": "2026-03-19 10:11:52+00:00",
+      "text": "@Teslaconomics \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034576004384162042",
+      "created_at": "2026-03-19 10:21:34+00:00",
+      "text": "RT @GnosisWolf: She\u2019s a keeper. I hope she makes it. \ud83d\ude4f https://t.co/ULh7wIuxK8",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034576021417340974",
+      "created_at": "2026-03-19 10:21:38+00:00",
+      "text": "@GnosisWolf \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034623336563818839",
+      "created_at": "2026-03-19 13:29:39+00:00",
+      "text": "@libsoftiktok Karen strikes again \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034624763717705809",
+      "created_at": "2026-03-19 13:35:19+00:00",
+      "text": "Made with @Grok Imagine",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034624887961288748",
+      "created_at": "2026-03-19 13:35:49+00:00",
+      "text": "@ApoStructura Exactly",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034625134087270525",
+      "created_at": "2026-03-19 13:36:48+00:00",
+      "text": "@ApoStructura Average payload mass delivered to orbit by Falcon 9 is higher than Shuttle too",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034625337762677178",
+      "created_at": "2026-03-19 13:37:36+00:00",
+      "text": "Be a dictator! https://t.co/imWXfEEK6z",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034627282028069301",
+      "created_at": "2026-03-19 13:45:20+00:00",
+      "text": "RT @SERobinsonJr: STARLINK: British Airways has revealed that its first aircraft fitted with Starlink is a Boeing 787-8 Dreamliner with reg\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034627494272446587",
+      "created_at": "2026-03-19 13:46:10+00:00",
+      "text": "@uncledoomer This has happened so many times",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034627653509275713",
+      "created_at": "2026-03-19 13:46:48+00:00",
+      "text": "RT @C_3C_3: \u201cI'ma kiII whites. I got out 2 days ago.\u201d\n\nDemocrats keep letting criminals out of jail to hunt white people.\n\nRemember the Med\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034627994141204594",
+      "created_at": "2026-03-19 13:48:10+00:00",
+      "text": "RT @tslaming: https://t.co/YaWAYDXIdP",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034628113590874148",
+      "created_at": "2026-03-19 13:48:38+00:00",
+      "text": "RT @PeterDiamandis: You've got 8 billion potential customers on Earth, BUT...\n\nIn 2026, only ~5.3 billion have internet access. That means\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034628323251573234",
+      "created_at": "2026-03-19 13:49:28+00:00",
+      "text": "@shanaka86 Hmm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034628754983800896",
+      "created_at": "2026-03-19 13:51:11+00:00",
+      "text": "@C_3C_3 True",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034630247027708035",
+      "created_at": "2026-03-19 13:57:07+00:00",
+      "text": "RT @XFreeze: This multi-scene video entirely made with Grok Imagine https://t.co/6ghXyAMlp3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034630386085699613",
+      "created_at": "2026-03-19 13:57:40+00:00",
+      "text": "@Suffragent_ Troubling",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034630430746697740",
+      "created_at": "2026-03-19 13:57:50+00:00",
+      "text": "@mark_k \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034630591367581776",
+      "created_at": "2026-03-19 13:58:29+00:00",
+      "text": "Yes https://t.co/yfcZtuvCcY",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034631674483638534",
+      "created_at": "2026-03-19 14:02:47+00:00",
+      "text": "RT @EndWokeness: Riviera Beach gunman: \"I shot every one of those people\"\n\nLawyer: \"Shh\u2026 this is being recorded\"\n\nGunman: \"I shot 'em in th\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034632118924665262",
+      "created_at": "2026-03-19 14:04:33+00:00",
+      "text": "@ZubyMusic There is an onslaught of AI bots",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034633342386393557",
+      "created_at": "2026-03-19 14:09:25+00:00",
+      "text": "@xdNiBoR Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034635322483785884",
+      "created_at": "2026-03-19 14:17:17+00:00",
+      "text": "RT @KatieMiller: The new Grok Imagine Chibi template. \n\nBeing a kid with my kid. https://t.co/9PrAVYZPjm",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034635916229435634",
+      "created_at": "2026-03-19 14:19:38+00:00",
+      "text": "RT @SpaceX: https://t.co/J0mKMS0kWB",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034638595190149195",
+      "created_at": "2026-03-19 14:30:17+00:00",
+      "text": "RT @teslaownersSV: The new Grok Imagine chibi template \n\nTried it out on Elon \ud83e\udd23 https://t.co/2RZKqcQuIS",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034638808164262155",
+      "created_at": "2026-03-19 14:31:08+00:00",
+      "text": "RT @TrumpWarRoom: Chibi Trump https://t.co/iPAX6RKk9u",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034676439187124285",
+      "created_at": "2026-03-19 17:00:40+00:00",
+      "text": "RT @cb_doge: Global population to shrink this century as birth rate falls.\n\nThe world is set to have 200 mn fewer people than previously ex\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034708345693905413",
+      "created_at": "2026-03-19 19:07:27+00:00",
+      "text": "@AmandaAskell Children are what really matter",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034709008029020207",
+      "created_at": "2026-03-19 19:10:05+00:00",
+      "text": "@SawyerMerritt @SpaceX SpaceX will ultimately deliver millions of tons to the Moon to build a self-growing city there and same for Mars",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034709299742863530",
+      "created_at": "2026-03-19 19:11:14+00:00",
+      "text": "@HarmlessYardDog We got lazy",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034710616028631083",
+      "created_at": "2026-03-19 19:16:28+00:00",
+      "text": "@shaunmmaguire Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034710771075273177",
+      "created_at": "2026-03-19 19:17:05+00:00",
+      "text": "Try Grok 4.20 Heavy https://t.co/CZnx6WAQ7K",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034711839096152235",
+      "created_at": "2026-03-19 19:21:20+00:00",
+      "text": "RT @TheHumanoidHub: Ashok Elluswamy, Tesla's AI lead, during a GTC discussion, highlighting the fundamental similarity in AI approaches for\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034712111977550168",
+      "created_at": "2026-03-19 19:22:25+00:00",
+      "text": "RT @SawyerMerritt: Nvidia CEO Jensen Huang in new interview on orbital datacenters:\n\n\"The challenge of course is that cooling, you can't ta\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034712153291419760",
+      "created_at": "2026-03-19 19:22:35+00:00",
+      "text": "@SawyerMerritt @wholemars Space is the way",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034712217787277632",
+      "created_at": "2026-03-19 19:22:50+00:00",
+      "text": "@BillyM2k \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034712288872341964",
+      "created_at": "2026-03-19 19:23:07+00:00",
+      "text": "@skorusARK \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034712472452833338",
+      "created_at": "2026-03-19 19:23:51+00:00",
+      "text": "@CNviolations \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034713019201224723",
+      "created_at": "2026-03-19 19:26:01+00:00",
+      "text": "@libsoftiktok Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034713036314091739",
+      "created_at": "2026-03-19 19:26:05+00:00",
+      "text": "@TheBabylonBee Too real",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034728607822831667",
+      "created_at": "2026-03-19 20:27:58+00:00",
+      "text": "RT @techdevnotes: Just noticed xAI has Potential",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034728804263018502",
+      "created_at": "2026-03-19 20:28:45+00:00",
+      "text": "RT @grok: When one brain isn't enough, switch to Grok 4.20.\n\nFour independent agents analyze your question, debate each other, and help you\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034729219759251598",
+      "created_at": "2026-03-19 20:30:24+00:00",
+      "text": "@dogeofficialceo It\u2019s so fun!",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034729450030731372",
+      "created_at": "2026-03-19 20:31:18+00:00",
+      "text": "@TheCinesthetic Great movie",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034729799340761141",
+      "created_at": "2026-03-19 20:32:42+00:00",
+      "text": "@aaronburnett \ud83d\udcaf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034731060530225208",
+      "created_at": "2026-03-19 20:37:42+00:00",
+      "text": "@TheBabylonBee \ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034731135646015797",
+      "created_at": "2026-03-19 20:38:00+00:00",
+      "text": "RT @curtis_yarvin: He who makes half a revolution digs his own grave",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034731389258801455",
+      "created_at": "2026-03-19 20:39:01+00:00",
+      "text": "@diana_dukic What needs to be better?",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034731489318048232",
+      "created_at": "2026-03-19 20:39:25+00:00",
+      "text": "@LayoffAI Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034732065594515695",
+      "created_at": "2026-03-19 20:41:42+00:00",
+      "text": "@xdNiBoR That\u2019s how we started out",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034736198686843149",
+      "created_at": "2026-03-19 20:58:07+00:00",
+      "text": "@Templarpilled Time to restore pride in Britain",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034739392955523363",
+      "created_at": "2026-03-19 21:10:49+00:00",
+      "text": "RT @seanhannity: I love Grok Imagine!! You have to try this. https://t.co/ZeYg8QADiu https://t.co/fUCgbhJLE3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034742220537176246",
+      "created_at": "2026-03-19 21:22:03+00:00",
+      "text": "@SawyerMerritt Common story",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034742388934213801",
+      "created_at": "2026-03-19 21:22:43+00:00",
+      "text": "@doganuraldesign Me too",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034772343126729009",
+      "created_at": "2026-03-19 23:21:45+00:00",
+      "text": "@dvorahfr Cool. \n\nTeam is working on greatly improving speech quality and synchronization.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034772437225914469",
+      "created_at": "2026-03-19 23:22:07+00:00",
+      "text": "RT @dvorahfr: 30 seconds of Grok Imagine with two characters:\n1- Create your characters\n2- Animate them, using both characters as image ref\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034772520319295536",
+      "created_at": "2026-03-19 23:22:27+00:00",
+      "text": "RT @XFreeze: Grok Imagine has a lot of cool Templates\n\nTry them...Have fun creating together with your friends and family https://t.co/jpjL\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034772604490572155",
+      "created_at": "2026-03-19 23:22:47+00:00",
+      "text": "Cute \ud83e\udd70 https://t.co/BVtXVbzfjE",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034772868907901132",
+      "created_at": "2026-03-19 23:23:50+00:00",
+      "text": "RT @Tesla: We \n\u2013 design the chips &amp; hardware\n\u2013 make the cars w/ said hardware\n\u2013 collect real-world data at scale\n\u2013 train the real-world AI\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034773028257837379",
+      "created_at": "2026-03-19 23:24:28+00:00",
+      "text": "@jonstewart Not as good as you! Stop being so humble.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034773787749884177",
+      "created_at": "2026-03-19 23:27:29+00:00",
+      "text": "Major update to the \ud835\udd4f AI recommendation algorithm rolling out next week. \n\nThis will be open sourced at the same time.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034782136071594033",
+      "created_at": "2026-03-20 00:00:40+00:00",
+      "text": "@40trillz @XFreeze Yes",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034782393639608343",
+      "created_at": "2026-03-20 00:01:41+00:00",
+      "text": "@PeterDiamandis Amazing Abundance is pretty compelling",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034782911657124039",
+      "created_at": "2026-03-20 00:03:45+00:00",
+      "text": "@grok @SpaceX69_420 @ChantalNatal @jonstewart Damn \ud83e\udd23\ud83e\udd23",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034784086506836180",
+      "created_at": "2026-03-20 00:08:25+00:00",
+      "text": "RT @TTomTToro: https://t.co/y1HIGfhrOW",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034784100775850005",
+      "created_at": "2026-03-20 00:08:28+00:00",
+      "text": "@TTomTToro lol",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034785028513964527",
+      "created_at": "2026-03-20 00:12:09+00:00",
+      "text": "RT @doganuraldesign: New Template: Cyber Garage\n\nUpload your photo and turn your home into a cyberpunk research site.\n\nTry it and share the\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034785321414795502",
+      "created_at": "2026-03-20 00:13:19+00:00",
+      "text": "@charliebcurran \ud83d\udd25\ud83d\ude02",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034786513603756251",
+      "created_at": "2026-03-20 00:18:04+00:00",
+      "text": "@ArthurMacwaters Yup",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034786553952874612",
+      "created_at": "2026-03-20 00:18:13+00:00",
+      "text": "RT @piloly: BEV sales in Spain. Tesla is in first place. \ud83c\uddea\ud83c\uddf8 https://t.co/TgA5IsdYV2",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034786752335106178",
+      "created_at": "2026-03-20 00:19:00+00:00",
+      "text": "\ud83d\ude02 https://t.co/LSuGyxAYIA",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034788600685203943",
+      "created_at": "2026-03-20 00:26:21+00:00",
+      "text": "@Huff4Congress @grok @nonieengel @xai Cute \ud83e\udd70",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034788746483384790",
+      "created_at": "2026-03-20 00:26:56+00:00",
+      "text": "Cute https://t.co/pGpePBOUtf",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034789806405034341",
+      "created_at": "2026-03-20 00:31:09+00:00",
+      "text": "@BillyM2k The reality is that there is massive cheating. \n\nBut it is impossible to prove that without ID and in-person voting.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034806212223815944",
+      "created_at": "2026-03-20 01:36:20+00:00",
+      "text": "This has been going on for a long time https://t.co/b5trSog7wk",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034807033082650827",
+      "created_at": "2026-03-20 01:39:36+00:00",
+      "text": "\ud83e\udd70 \ud83c\uddfa\ud83c\uddf8 https://t.co/HJNeCVLejz",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034807233746542620",
+      "created_at": "2026-03-20 01:40:24+00:00",
+      "text": "Tesla Semi is super fun to drive https://t.co/fs0uJRecdK",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034807488848306387",
+      "created_at": "2026-03-20 01:41:24+00:00",
+      "text": "RT @JessePeltan: Happy Solar Pessimism Chart Update Day to all who celebrate https://t.co/fpDxAdoa3D",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034824678024638586",
+      "created_at": "2026-03-20 02:49:43+00:00",
+      "text": "We don\u2019t live in a democracy if our elected leaders fail to implement the will of the people https://t.co/hluxPitLw0",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034855037386858718",
+      "created_at": "2026-03-20 04:50:21+00:00",
+      "text": "RT @tetsuoai: Try the Chibi template on Grok Imagine \ud83e\udd23 https://t.co/FG1ezQgd4W",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034855343629771106",
+      "created_at": "2026-03-20 04:51:34+00:00",
+      "text": "@JessePeltan Yup",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034857091132006829",
+      "created_at": "2026-03-20 04:58:30+00:00",
+      "text": "@WR4NYGov Jon Stewart really is a diabolical propagandist, a subtle wielder of the knife of deception",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034859206600532264",
+      "created_at": "2026-03-20 05:06:55+00:00",
+      "text": "@AFpost Looks like he finally took some Ozempic",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034861384471916979",
+      "created_at": "2026-03-20 05:15:34+00:00",
+      "text": "@DrewPavlou True",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034861573882482733",
+      "created_at": "2026-03-20 05:16:19+00:00",
+      "text": "Nailed it https://t.co/3yVDJkQ9V9",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034861867676705060",
+      "created_at": "2026-03-20 05:17:29+00:00",
+      "text": "@libsoftiktok I believe him",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034861952280011197",
+      "created_at": "2026-03-20 05:17:49+00:00",
+      "text": "Madness https://t.co/UYPFsKlSjc",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034862409224204786",
+      "created_at": "2026-03-20 05:19:38+00:00",
+      "text": "@markpinc Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034862419844243841",
+      "created_at": "2026-03-20 05:19:41+00:00",
+      "text": "RT @markpinc: The truth about sf homelessness spending. Its squandered by bureaucracy.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034862795033088088",
+      "created_at": "2026-03-20 05:21:10+00:00",
+      "text": "@0xGeeGee Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034863434379284796",
+      "created_at": "2026-03-20 05:23:43+00:00",
+      "text": "Try using @Grok for your taxes! https://t.co/MVhYSy5PcP",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034870922147155987",
+      "created_at": "2026-03-20 05:53:28+00:00",
+      "text": "@brian_lovin @Eric_M_Stevens \ud83d\udd25",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034877802613518763",
+      "created_at": "2026-03-20 06:20:49+00:00",
+      "text": "@karpathy Cool, I will check it out",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034879067732980175",
+      "created_at": "2026-03-20 06:25:50+00:00",
+      "text": "RT @ksorbs: https://t.co/XTeMb8GXfG",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034879868966773234",
+      "created_at": "2026-03-20 06:29:01+00:00",
+      "text": "\ud83d\ude02 https://t.co/ixRNlWVK9z",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034880709400375650",
+      "created_at": "2026-03-20 06:32:22+00:00",
+      "text": "@MayRockwood1959 !!",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034880838106849554",
+      "created_at": "2026-03-20 06:32:52+00:00",
+      "text": "RT @PlanetOfMemes: How do we free ourselves from this cycle? https://t.co/AxDZ0fUdrG",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034880939684503998",
+      "created_at": "2026-03-20 06:33:16+00:00",
+      "text": "@joeroganhq Yeah",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034881079430303784",
+      "created_at": "2026-03-20 06:33:50+00:00",
+      "text": "It\u2019s super fun to drive! https://t.co/RSF3rYcGCR",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034881633468522760",
+      "created_at": "2026-03-20 06:36:02+00:00",
+      "text": "RT @paranoidream: we live in an amazing time \ud83d\ude02 https://t.co/pqDXXigchX",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034881816646361212",
+      "created_at": "2026-03-20 06:36:46+00:00",
+      "text": "Imagine https://t.co/UOXrx70P7m",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034882065989296296",
+      "created_at": "2026-03-20 06:37:45+00:00",
+      "text": "Inevitably, this will be 4/20 \ud83d\ude02 https://t.co/Z9DwCzJvMi",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034882369078141033",
+      "created_at": "2026-03-20 06:38:57+00:00",
+      "text": "@pmarca Yeah, that\u2019s actually going to happen. \n\nReal-time generated video specific to the user.",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034882454289621272",
+      "created_at": "2026-03-20 06:39:18+00:00",
+      "text": "RT @Starlink: Starlink\u2019s high-speed internet is available in your area.\n\nExperience speeds up to 400+ Mbps to stream your favorite shows an\u2026",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034883144403578880",
+      "created_at": "2026-03-20 06:42:02+00:00",
+      "text": "@AdamLowisz Same",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034883525837815921",
+      "created_at": "2026-03-20 06:43:33+00:00",
+      "text": "@JoshuaSteinman @Cernovich Is this for real?",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034884299825332603",
+      "created_at": "2026-03-20 06:46:38+00:00",
+      "text": "Banger \ud83e\udd23\ud83e\udd23 https://t.co/2T8PMAXGh3",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034890497022673091",
+      "created_at": "2026-03-20 07:11:15+00:00",
+      "text": "https://t.co/FNjnZ9TOXS",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034890743253541196",
+      "created_at": "2026-03-20 07:12:14+00:00",
+      "text": "RT @cb_doge: https://t.co/54RSZUmaW4",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034892314330763359",
+      "created_at": "2026-03-20 07:18:28+00:00",
+      "text": "@Kpaxs I share Demis\u2019s sentiments",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034893596781158467",
+      "created_at": "2026-03-20 07:23:34+00:00",
+      "text": "RT @XFreeze: Guess who?? https://t.co/oLJ5fD9wId",
+      "in_flight": false,
+      "flight_id": NaN
+    },
+    {
+      "id": "2034895182022549797",
+      "created_at": "2026-03-20 07:29:52+00:00",
+      "text": "@DrewPavlou Wow",
+      "in_flight": false,
+      "flight_id": NaN
+    }
+  ],
+  "flights": [
+    {
+      "takeoff_utc": "2025-12-01 00:10:33.998000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-01 02:13:31.622000+00:00",
+      "destination": "Pittsburgh, Pennsylvania, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1031.0,
+      "co2_tons": 11.0,
+      "fuel_cost_usd": 5897.0
+    },
+    {
+      "takeoff_utc": "2025-12-01 02:50:39.185000+00:00",
+      "origin": "Pittsburgh, Pennsylvania, United States",
+      "landing_utc": "2025-12-01 05:36:50.270000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1393.0,
+      "co2_tons": 15.0,
+      "fuel_cost_usd": 7967.0
+    },
+    {
+      "takeoff_utc": "2025-12-02 18:34:17.745000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-02 21:45:42.053000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1605.0,
+      "co2_tons": 17.0,
+      "fuel_cost_usd": 9179.0
+    },
+    {
+      "takeoff_utc": "2025-12-05 05:47:35.061000+00:00",
+      "origin": "Brownsville, Texas, United States",
+      "landing_utc": "2025-12-05 06:28:44.958000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": 41.0,
+      "fuel_gallons": 345.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 1965.0
+    },
+    {
+      "takeoff_utc": "2025-12-09 17:50:02.788000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-09 20:56:19.633000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1562.0,
+      "co2_tons": 16.0,
+      "fuel_cost_usd": 8888.0
+    },
+    {
+      "takeoff_utc": "2025-12-09 21:46:40.921000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2025-12-09 22:34:01.042000+00:00",
+      "destination": "Burbank, California, United States",
+      "duration_minutes": 47.0,
+      "fuel_gallons": 397.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2258.0
+    },
+    {
+      "takeoff_utc": "2025-12-09 23:13:35.759000+00:00",
+      "origin": "Burbank, California, United States",
+      "landing_utc": "2025-12-09 23:59:34.159000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 46.0,
+      "fuel_gallons": 386.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2196.0
+    },
+    {
+      "takeoff_utc": "2025-12-11 05:38:38.949000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2025-12-11 08:27:15.798000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1414.0,
+      "co2_tons": 15.0,
+      "fuel_cost_usd": 8043.0
+    },
+    {
+      "takeoff_utc": "2025-12-14 20:28:38.110000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-14 23:01:19.538000+00:00",
+      "destination": "Dulles, Virginia, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1280.0,
+      "co2_tons": 14.0,
+      "fuel_cost_usd": 7220.0
+    },
+    {
+      "takeoff_utc": "2025-12-15 04:14:13.447000+00:00",
+      "origin": "Dulles, Virginia, United States",
+      "landing_utc": "2025-12-15 06:53:26.775000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1335.0,
+      "co2_tons": 14.0,
+      "fuel_cost_usd": 7528.0
+    },
+    {
+      "takeoff_utc": "2025-12-16 18:17:46.699000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-16 21:15:59.394000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2025-12-18 06:03:36.550000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2025-12-18 08:35:38.088000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 612.0,
+      "co2_tons": 6.0,
+      "fuel_cost_usd": 3452.0
+    },
+    {
+      "takeoff_utc": "2025-12-19 20:07:13.392000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-20 22:29:54.717000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 658.0,
+      "co2_tons": 7.0,
+      "fuel_cost_usd": 3707.0
+    },
+    {
+      "takeoff_utc": "2025-12-22 00:05:47.141000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2025-12-22 00:56:22.055000+00:00",
+      "destination": "Los Angeles, California, United States",
+      "duration_minutes": 50.0,
+      "fuel_gallons": 424.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2388.0
+    },
+    {
+      "takeoff_utc": "2025-12-22 01:56:23.209000+00:00",
+      "origin": "Los Angeles, California, United States",
+      "landing_utc": "2025-12-22 04:13:27.272000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1149.0,
+      "co2_tons": 12.0,
+      "fuel_cost_usd": 6470.0
+    },
+    {
+      "takeoff_utc": "2025-12-23 01:28:59.892000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2025-12-23 02:25:36.737000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": 56.0,
+      "fuel_gallons": 475.0,
+      "co2_tons": 5.0,
+      "fuel_cost_usd": 2672.0
+    },
+    {
+      "takeoff_utc": "2026-01-06 21:47:30.086000+00:00",
+      "origin": "Hawthorne, California, United States",
+      "landing_utc": "2026-01-06 22:36:35.769000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 49.0,
+      "fuel_gallons": 412.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2313.0
+    },
+    {
+      "takeoff_utc": "2026-01-12 01:11:04.907000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2026-01-12 01:58:30.325000+00:00",
+      "destination": "Brownsville, Texas, United States",
+      "duration_minutes": 47.0,
+      "fuel_gallons": 398.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2234.0
+    },
+    {
+      "takeoff_utc": "2026-01-13 22:14:56.156000+00:00",
+      "origin": "Brownsville, Texas, United States",
+      "landing_utc": "2026-01-13 23:04:45.644000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": 49.0,
+      "fuel_gallons": 418.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2347.0
+    },
+    {
+      "takeoff_utc": "2026-01-20 19:44:57.335000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2026-01-20 22:51:01.767000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1559.0,
+      "co2_tons": 16.0,
+      "fuel_cost_usd": 8730.0
+    },
+    {
+      "takeoff_utc": "2026-01-20 23:21:24.770000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-01-21 00:08:19.926000+00:00",
+      "destination": "Burbank, California, United States",
+      "duration_minutes": 46.0,
+      "fuel_gallons": 393.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2203.0
+    },
+    {
+      "takeoff_utc": "2026-01-21 00:37:48.139000+00:00",
+      "origin": "Burbank, California, United States",
+      "landing_utc": "2026-01-21 01:25:43.304000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 47.0,
+      "fuel_gallons": 402.0,
+      "co2_tons": 4.0,
+      "fuel_cost_usd": 2250.0
+    },
+    {
+      "takeoff_utc": "2026-01-22 03:11:57.871000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-01-22 13:22:52.753000+00:00",
+      "destination": "Zurich, Z\u00fcrich, Switzerland",
+      "duration_minutes": NaN,
+      "fuel_gallons": 5121.0,
+      "co2_tons": 54.0,
+      "fuel_cost_usd": 28782.0
+    },
+    {
+      "takeoff_utc": "2026-01-22 20:28:07.835000+00:00",
+      "origin": "Zurich, Z\u00fcrich, Switzerland",
+      "landing_utc": "2026-01-23 06:18:05.114000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 4946.0,
+      "co2_tons": 52.0,
+      "fuel_cost_usd": 27796.0
+    },
+    {
+      "takeoff_utc": "2026-02-15 20:49:53.522000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2026-02-15 23:58:57.112000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1585.0,
+      "co2_tons": 17.0,
+      "fuel_cost_usd": 8988.0
+    },
+    {
+      "takeoff_utc": "2026-02-21 04:35:17.054000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-02-21 07:10:23.086000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1300.0,
+      "co2_tons": 14.0,
+      "fuel_cost_usd": 7412.0
+    },
+    {
+      "takeoff_utc": "2026-03-09 00:33:01.884000+00:00",
+      "origin": "Memphis, Tennessee, United States",
+      "landing_utc": "2026-03-09 03:57:32.757000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-10 20:45:09.502000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2026-03-10 23:43:53.628000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": 1498.0,
+      "co2_tons": 16.0,
+      "fuel_cost_usd": 8586.0
+    },
+    {
+      "takeoff_utc": "2026-03-12 00:10:03.702000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-03-12 00:41:11.413000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 31.0,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-12 01:35:21.495000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-03-12 01:36:08.909000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 0.0,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-13 20:51:12.064000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-03-13 21:35:47.385000+00:00",
+      "destination": "Burbank, California, United States",
+      "duration_minutes": 44.0,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-13 22:32:28.183000+00:00",
+      "origin": "Burbank, California, United States",
+      "landing_utc": "2026-03-13 23:16:58.187000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 44.0,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-16 03:19:39.027000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-03-16 03:34:27.057000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 14.0,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-16 04:00:12.866000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-03-16 04:15:06.908000+00:00",
+      "destination": "San Jose, California, United States",
+      "duration_minutes": 14.0,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-16 18:06:12.259000+00:00",
+      "origin": "San Jose, California, United States",
+      "landing_utc": "2026-03-16 19:10:51.729000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    },
+    {
+      "takeoff_utc": "2026-03-16 21:00:01.135000+00:00",
+      "origin": "Austin, Texas, United States",
+      "landing_utc": "2026-03-16 21:02:00.225000+00:00",
+      "destination": "Austin, Texas, United States",
+      "duration_minutes": NaN,
+      "fuel_gallons": NaN,
+      "co2_tons": NaN,
+      "fuel_cost_usd": NaN
+    }
+  ]
 }
