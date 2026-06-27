@@ -1,0 +1,65 @@
+name: Beach Price Scraper
+
+on:
+  schedule:
+    # Every Monday at 8am UTC (4am ET / 1am PT) — change as you like
+    - cron: '0 8 * * 1'
+  workflow_dispatch: # also lets you trigger it manually from the GitHub UI
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: beach_scraper/package.json
+
+      - name: Install dependencies
+        working-directory: beach_scraper
+        run: npm install
+
+      - name: Install Chromium
+        working-directory: beach_scraper
+        run: npx playwright install chromium --with-deps
+
+      - name: Run scraper
+        working-directory: beach_scraper
+        run: node scraper.js
+
+      - name: Commit results
+        run: |
+          git config user.name  "beach-price-bot"
+          git config user.email "bot@noreply"
+          git add beach_scraper/results/
+          git diff --cached --quiet || git commit -m "chore: weekly beach price update $(date -u +%Y-%m-%d)"
+          git push
+
+      # Optional: send yourself the summary by email.
+      # Uncomment and add GMAIL_USER + GMAIL_PASS as GitHub repo secrets
+      # to get a weekly email with the top deals.
+      #
+      # - name: Email summary
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 465
+      #     username: ${{ secrets.GMAIL_USER }}
+      #     password: ${{ secrets.GMAIL_PASS }}
+      #     subject: "Beaches TCI prices — ${{ github.run_number }}"
+      #     to: your@email.com
+      #     from: ${{ secrets.GMAIL_USER }}
+      #     body: ${{ steps.scrape.outputs.summary }}
+
+      - name: Upload results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: beach-prices-${{ github.run_number }}
+          path: beach_scraper/results/
+          retention-days: 90
