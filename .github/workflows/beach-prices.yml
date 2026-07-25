@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # also lets you trigger it manually from the GitHub UI
   push:
     branches: ['claude/beach-price-scraper-4jd7na']
-    paths: ['.github/workflows/beach-prices.yml']
+    paths: ['.github/workflows/beach-prices.yml', 'beach_scraper/**']
 
 jobs:
   scrape:
