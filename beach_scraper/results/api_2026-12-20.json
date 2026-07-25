@@ -1,6 +1,0 @@
-[
-  {
-    "url": "https://obe.beaches.com/api/session/subSession/data/",
-    "body": "{\"vacation\":{\"destination\":\"Turks & Caicos\",\"rstCode\":\"BTC\",\"checkIn\":\"2026-12-20\",\"checkOut\":\"2026-12-27\",\"adults\":2,\"children\":0,\"infants\":0,\"additionalGuests\":[{\"title\":\"\",\"gender\":\"\",\"firstName\":\"\",\"lastName\":\"\",\"middleName\":\"\",\"dateOfBirth\":\"\",\"guestType\":\"ADULT\",\"passengerType\":\"ADT\"}],\"airIncluded\":false,\"arrivalGateway\":\"\",\"departureGateway\":\"\",\"seatType\":\"economy\",\"firstName\":\"\",\"email\":\"\",\"country\":\"\",\"city\":\"Providenciales\",\"subscriptionIncluded\":false,\"adjoiningRooms\":false,\"categoryCode\":\"\",\"length\":7,\"psfirstName\":\"\",\"pslastName\":\"\",\"reQuote\":false,\"viewedRooms\":[]},\"flights\":{},\"guests\":{}}"
-  }
-]

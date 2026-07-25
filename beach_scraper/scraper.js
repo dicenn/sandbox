@@ -443,6 +443,10 @@ async function setCounter(page, name, target, log) {
 // Room rates never arrive as JSON — the OBE server-renders the room step, so
 // the prices only exist in the DOM. Pull every "$N,NNN" that sits in its own
 // element, then walk up to the surrounding card to name the room.
+//
+// Only the first batch of cards is rendered (the rest lazy-load on scroll),
+// but the list defaults to "Price Low to High", so the cheapest room is always
+// among them and taking the minimum is sound without paging the whole list.
 async function extractRoomsFromDom(page) {
   return page
     .evaluate(() => {
@@ -459,14 +463,32 @@ async function extractRoomsFromDom(page) {
         const price = parseInt(m[1].replace(/,/g, ''), 10);
         if (!Number.isFinite(price) || price < 500) continue; // skip fees/discounts
 
-        // Climb to the card: the first ancestor that reads like a room block.
+        // Climb to the card and name the room. The price sits in its own block
+        // ("Room All-Inclusive Price:" / "$23,550" / "ROOM DETAILS"), so the
+        // nearest ancestor is that block, not the card — skip anything that
+        // reads as a field label and prefer a real heading.
+        const isLabel = (s) =>
+          !s ||
+          s.includes('$') ||
+          s.endsWith(':') ||
+          /price|per night|category|occupancy|rooms?\s+left|room details/i.test(s);
+
         let node = el;
         let roomType = 'Unknown room';
-        for (let i = 0; i < 8 && node.parentElement; i++) {
+        for (let i = 0; i < 10 && node.parentElement; i++) {
           node = node.parentElement;
+
+          const heading = node.querySelector('h1,h2,h3,h4,h5');
+          const headingText = heading && heading.textContent.trim();
+          if (headingText && !isLabel(headingText) && headingText.length > 4 && headingText.length < 120) {
+            roomType = headingText;
+            break;
+          }
+
           const lines = node.innerText.split('\n').map((s) => s.trim()).filter(Boolean);
-          if (lines.length >= 3 && !lines[0].includes('$') && lines[0].length > 5 && lines[0].length < 120) {
-            roomType = lines[0];
+          const named = lines.find((s) => !isLabel(s) && s.length > 4 && s.length < 120);
+          if (named && lines.length >= 4) {
+            roomType = named;
             break;
           }
         }
