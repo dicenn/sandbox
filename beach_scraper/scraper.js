@@ -178,7 +178,10 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     };
 
     page.on('response', handler);
-    await page.goto(searchUrl, { waitUntil: 'networkidle', timeout: 30000 }).catch(() => {});
+    // 'domcontentloaded' instead of 'networkidle' — SPAs never fully idle
+    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
+    // Give JS time to fire API calls after DOM is ready
+    await sleep(8000);
   });
 }
 
@@ -441,8 +444,8 @@ async function run() {
     // dates in MM/DD/YYYY format, child ages as child1Age/child2Age params.
     console.log('Initializing OBE session...');
     await page.goto('https://obe.beaches.com/', {
-      waitUntil: 'networkidle',
-      timeout: 30000,
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
     });
     await sleep(2000);
 
