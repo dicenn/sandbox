@@ -141,8 +141,8 @@ const TEST_MODE = process.env.TEST_MODE === 'true';
 //   [data-testid="radio-no-flights-ui"]        visually-hidden radio, value="false"
 //   [data-testid="select-dates-ui"]            opens the range calendar popover
 //   [data-testid="calendar-cell-ui"][data-date="YYYY-MM-DD"]
-//                                              every day Jul-2026..Dec-2028 is
-//                                              pre-rendered, so no month paging
+//                                              only the two visible months are
+//                                              mounted, so page forward first
 //   [data-testid="select-guests-ui"]           opens Adults/Children/Infants counters
 //   [data-testid="form-vacation-submit-button-ui"]  → advances to step-2 (ROOM)
 //
@@ -170,24 +170,34 @@ async function dismissOverlays(page) {
   await killChatWidget(page);
 }
 
-// The NICE CXone chat panel auto-expands over the "Number of Guests" field,
-// which is what ate the guest-counter click. Clicking HIDE CHAT is unreliable
-// (it lives in an iframe), so remove the widget outright. Scoped to pinned,
-// high-z-index nodes whose id/class/src names a chat vendor, to avoid
-// deleting anything belonging to the booking form itself.
-async function killChatWidget(page) {
-  await page
-    .evaluate(() => {
-      const vendor = /chat|cxone|gomoxie|inqms|nice-?incontact|livechat/i;
-      for (const el of document.querySelectorAll('body *')) {
-        const cs = getComputedStyle(el);
-        if (cs.position !== 'fixed' && cs.position !== 'absolute') continue;
-        if ((parseInt(cs.zIndex, 10) || 0) < 100) continue;
-        const id = `${el.id} ${el.className} ${el.tagName === 'IFRAME' ? el.src : ''}`;
-        if (vendor.test(id)) el.remove();
+// The NICE CXone chat panel auto-expands over the "Number of Guests" field and
+// eats the click meant for it. Removing it once is not enough: it opens on its
+// own timer, well after page load, so it has to be swept repeatedly.
+//
+// Matches on the vendor's own markers (iframe src, id/class, or the panel's
+// "HIDE CHAT"/"Powered by NICE CXone" chrome) rather than on position or
+// z-index, which missed it entirely on run 8.
+const CHAT_JANITOR = `(() => {
+  const vendor = /cxone|gomoxie|inqms|nice-?incontact|livechat|inq-?chat/i;
+  const sweep = () => {
+    try {
+      for (const f of document.querySelectorAll('iframe')) {
+        if (vendor.test((f.src || '') + ' ' + f.id + ' ' + f.className)) f.remove();
       }
-    })
-    .catch(() => {});
+      for (const el of document.querySelectorAll('div,section,aside')) {
+        if (el.childElementCount > 40) continue;
+        if (vendor.test(el.id + ' ' + el.className)) { el.remove(); continue; }
+        const t = el.textContent || '';
+        if (/HIDE CHAT|END CHAT|Powered by NICE CXone/i.test(t) && t.length < 2000) el.remove();
+      }
+    } catch {}
+  };
+  sweep();
+  setInterval(sweep, 500);
+})()`;
+
+async function killChatWidget(page) {
+  await page.evaluate(CHAT_JANITOR).catch(() => {});
 }
 
 // The hydrated calendar only mounts two months at a time behind a next arrow,
@@ -236,18 +246,31 @@ async function waitIdle(page) {
   await sleep(800);
 }
 
+// Click without letting a floating widget steal it. Playwright's force:true
+// still dispatches at real coordinates, so an overlay sitting on top receives
+// the event instead; a programmatic click ignores geometry entirely. react-aria
+// treats a detail=0 click as a virtual (assistive-tech) press, so this does
+// drive its handlers. Fall back to a real click for anything that needs one.
+async function robustClick(locator) {
+  const programmatic = await locator
+    .evaluate((el) => el.click())
+    .then(() => true)
+    .catch(() => false);
+  if (programmatic) return true;
+  return locator.click({ force: true, timeout: 5000 }).then(() => true).catch(() => false);
+}
+
 // Open a popover and confirm it actually rendered. The trigger is a react-aria
 // button whose panel mounts on demand, so a click that lands early is a no-op.
 async function openPopover(page, triggerTestId, panelTestId, log) {
+  const trigger = page.locator(`[data-testid="${triggerTestId}"] [data-testid="button-ui"]`).first();
+  const panel = page.locator(`[data-testid="${panelTestId}"]`).first();
+
   for (let attempt = 1; attempt <= 3; attempt++) {
     await waitIdle(page);
-    await page
-      .locator(`[data-testid="${triggerTestId}"] [data-testid="button-ui"]`)
-      .first()
-      .click({ force: true })
-      .catch(() => {});
+    await killChatWidget(page); // it re-opens on its own timer
+    await robustClick(trigger);
 
-    const panel = page.locator(`[data-testid="${panelTestId}"]`).first();
     if (await panel.waitFor({ state: 'visible', timeout: 8000 }).then(() => true).catch(() => false)) {
       log(`${panelTestId} opened (attempt ${attempt})`);
       return true;
@@ -288,7 +311,7 @@ async function fillVacationForm(page, checkIn, checkOut) {
     if ((await cell.getAttribute('data-disabled').catch(() => null)) === 'true') {
       throw new Error(`${label} ${isoDate(d)} is unavailable`);
     }
-    await cell.click({ force: true });
+    await robustClick(cell);
     log(`${label} = ${isoDate(d)}`);
     await sleep(1500);
   }
@@ -298,13 +321,13 @@ async function fillVacationForm(page, checkIn, checkOut) {
   await waitIdle(page);
 
   // 4 ─ Guests. Counters start at 2 adults / 0 children, so nudge to target.
-  if (await openPopover(page, 'select-guests-ui', 'counter-ui', log)) {
-    await setCounter(page, 'Adults', adults, log);
-    await setCounter(page, 'Children', children.length, log);
-    await page.keyboard.press('Escape').catch(() => {});
-  } else {
-    log('guest popover never opened — falling back to form defaults');
+  // A wrong count here silently prices the wrong trip, so refuse to continue.
+  if (!(await openPopover(page, 'select-guests-ui', 'counter-ui', log))) {
+    throw new Error('guest popover never opened');
   }
+  await setCounter(page, 'Adults', adults, log);
+  await setCounter(page, 'Children', children.length, log);
+  await page.keyboard.press('Escape').catch(() => {});
   await waitIdle(page);
 }
 
@@ -344,20 +367,18 @@ async function setCounter(page, name, target, log) {
   };
 
   let current = await readValue();
-  if (current === null) {
-    log(`${name}: could not read counter, skipping`);
-    return;
-  }
+  if (current === null) throw new Error(`could not read ${name} counter`);
 
   let guard = 0;
   while (current !== target && guard++ < 10) {
-    await (current < target ? inc : dec).click({ force: true }).catch(() => {});
+    await robustClick(current < target ? inc : dec);
     await sleep(700);
     const next = await readValue();
     if (next === null || next === current) break; // stopped responding — bail
     current = next;
   }
   log(`${name} = ${current} (wanted ${target})`);
+  if (current !== target) throw new Error(`${name} stuck at ${current}, wanted ${target}`);
 }
 
 // Room rates never arrive as JSON — the OBE server-renders the room step, so
@@ -492,6 +513,10 @@ async function run() {
       '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     viewport: { width: 1280, height: 900 },
   });
+
+  // Arm the chat sweeper before any document script runs, so the widget is
+  // gone on every navigation rather than only when we remember to ask.
+  await context.addInitScript(CHAT_JANITOR);
 
   const page = await context.newPage();
   const results = [];
