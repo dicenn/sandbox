@@ -160,21 +160,37 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
       if (!resolved) { resolved = true; resolve(null); }
     }, 45000);
 
-    const handler = async (response) => {
+    // Log ALL outgoing requests in test mode so we can see what the SPA sends
+    const reqHandler = (request) => {
+      const u = request.url();
+      if (!u.includes('datadoghq') && !u.includes('ketchcdn') && !u.includes('gomoxie') &&
+          !u.includes('pinterest') && !u.includes('reddit') && !u.includes('yimg') &&
+          !u.includes('xu-09276') && !u.includes('google') && !u.includes('facebook')) {
+        console.log(`  >> ${request.method()} ${u.slice(0, 120)}`);
+        const pd = request.postData();
+        if (pd) console.log(`     body: ${pd.slice(0, 200)}`);
+      }
+    };
+
+    const resHandler = async (response) => {
       if (resolved) return;
       const url = response.url();
       const ct = response.headers()['content-type'] || '';
 
       if (!ct.includes('json')) return;
 
-      // In test mode log every JSON response so we can identify the pricing endpoint
       if (TEST_MODE) {
-        try {
-          const text = await response.text();
-          console.log(`  << JSON [${response.status()}] ${url.slice(0, 100)}`);
-          console.log(`     preview: ${text.slice(0, 200)}`);
-        } catch {}
-        return; // don't try to parse for price yet; we're just mapping endpoints
+        // Skip analytics noise, log everything else
+        if (!url.includes('datadoghq') && !url.includes('ketchcdn') && !url.includes('gomoxie') &&
+            !url.includes('pinterest') && !url.includes('reddit') && !url.includes('yimg') &&
+            !url.includes('xu-09276') && !url.includes('google') && !url.includes('facebook')) {
+          try {
+            const text = await response.text();
+            console.log(`  << JSON [${response.status()}] ${url.slice(0, 120)}`);
+            console.log(`     preview: ${text.slice(0, 300)}`);
+          } catch {}
+        }
+        return;
       }
 
       // Production: only look at likely pricing endpoints
@@ -192,22 +208,50 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
           if (cheapest) {
             clearTimeout(timeout);
             resolved = true;
-            page.off('response', handler);
+            page.off('response', resHandler);
             resolve(cheapest);
           }
-        } catch {
-          // not JSON or no rates in this response
-        }
+        } catch {}
       }
     };
 
-    page.on('response', handler);
-    // 'domcontentloaded' instead of 'networkidle' — SPAs never fully idle
-    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
-    // Give JS time to fire API calls after DOM is ready
-    await sleep(TEST_MODE ? 20000 : 8000);
+    if (TEST_MODE) page.on('request', reqHandler);
+    page.on('response', resHandler);
 
-    if (TEST_MODE && !resolved) { resolved = true; resolve(null); }
+    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
+    await sleep(5000);
+
+    if (TEST_MODE) {
+      // Screenshot shows us what the page actually rendered
+      const shot = `./results/screenshot_combo${isoDate(checkIn)}.png`;
+      await page.screenshot({ path: shot, fullPage: false }).catch(() => {});
+      console.log(`  📸 screenshot → ${shot}`);
+
+      // Try clicking any visible search/availability button to trigger the price fetch
+      const searchTriggers = [
+        'button:has-text("Search")',
+        'button:has-text("Check Availability")',
+        'button:has-text("Find Rooms")',
+        'button:has-text("Book")',
+        '[data-testid*="search"]',
+      ];
+      for (const sel of searchTriggers) {
+        const btn = page.locator(sel).first();
+        if (await btn.isVisible({ timeout: 1000 }).catch(() => false)) {
+          console.log(`  Clicking: ${sel}`);
+          await btn.click().catch(() => {});
+          break;
+        }
+      }
+
+      // Wait another 20s for any price API call to fire after the click
+      await sleep(20000);
+      page.off('request', reqHandler);
+    } else {
+      await sleep(8000);
+    }
+
+    if (!resolved) { resolved = true; resolve(null); }
   });
 }
 
