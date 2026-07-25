@@ -331,6 +331,8 @@ async function fillVacationForm(page, checkIn, checkOut) {
   await waitIdle(page);
 
   // 4 ─ Guests. Counters start at 2 adults / 0 children, so nudge to target.
+  // The OBE bands are Adults (16+), Children (2-15), Infants (0-2); both kids
+  // in config land in Children for every date in the search window.
   // A wrong count here silently prices the wrong trip, so refuse to continue.
   if (!(await openPopover(page, 'select-guests-ui', 'counter-ui', log))) {
     throw new Error('guest popover never opened');
@@ -361,19 +363,20 @@ async function dumpCalendarDiagnostics(page, checkIn, log) {
 }
 
 // Drive one +/- stepper to a target value using its aria-labels.
+//
+// counter-ui is the <input> itself, not a wrapper — the +/- buttons are its
+// siblings. It is also disabled, so the value has to be read as a form value
+// rather than as text (innerText on an input is always empty).
 async function setCounter(page, name, target, log) {
+  const field = page.locator(`input[data-testid="counter-ui"][aria-label="${name}"]`).first();
   const inc = page.locator(`[aria-label="Increase ${name}"]`).first();
   const dec = page.locator(`[aria-label="Decrease ${name}"]`).first();
 
-  // The current value is the only number rendered inside the counter row.
   const readValue = async () => {
-    const txt = await page
-      .locator(`[data-testid="counter-ui"]:has([aria-label="Increase ${name}"])`)
-      .first()
-      .innerText()
-      .catch(() => '');
-    const m = txt.match(/\d+/);
-    return m ? parseInt(m[0], 10) : null;
+    let v = await field.inputValue().catch(() => null);
+    if (v === null || v === '') v = await field.getAttribute('value').catch(() => null);
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) ? n : null;
   };
 
   let current = await readValue();
