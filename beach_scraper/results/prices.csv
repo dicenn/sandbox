@@ -1,4 +1,13 @@
 checkIn,checkOut,nights,price,roomType,status,scrapedAt
-2026-12-20,2026-12-27,7,,,no_price,2026-07-25T17:43:06.827Z
-2027-02-10,2027-02-16,6,,,no_price,2026-07-25T17:43:06.827Z
-2027-04-05,2027-04-13,8,,,no_price,2026-07-25T17:43:06.827Z
+2026-12-20,2026-12-27,7,,,error: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="calendar-cell-ui"][data-date="2026-12-20"]').first()
+,2026-07-25T18:05:32.128Z
+2027-02-10,2027-02-16,6,,,error: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="calendar-cell-ui"][data-date="2027-02-10"]').first()
+,2026-07-25T18:05:32.128Z
+2027-04-05,2027-04-13,8,,,error: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('[data-testid="calendar-cell-ui"][data-date="2027-04-05"]').first()
+,2026-07-25T18:05:32.128Z
