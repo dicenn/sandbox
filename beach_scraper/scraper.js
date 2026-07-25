@@ -148,6 +148,62 @@ const TEST_MODE = process.env.TEST_MODE === 'true';
 //
 // Child birthdates are NOT collected here; the wizard asks for them at the later
 // GUESTS step, so room pricing only needs the adult/child counts.
+// A ketch cookie banner and a chat widget both float above the form and will
+// swallow clicks aimed at what is underneath them. Best-effort: neither is
+// guaranteed to appear, so every failure here is ignored.
+async function dismissOverlays(page) {
+  const dismissals = [
+    'button:has-text("Accept All")',
+    '#onetrust-accept-btn-handler',
+    '[class*="ketch"] button:has-text("Accept")',
+    'button[aria-label*="close" i]',
+    'button[title*="close" i]',
+  ];
+  for (const sel of dismissals) {
+    const el = page.locator(sel).first();
+    if (await el.isVisible({ timeout: 800 }).catch(() => false)) {
+      await el.click({ force: true, timeout: 3000 }).catch(() => {});
+      await sleep(400);
+    }
+  }
+}
+
+// The hydrated calendar only mounts two months at a time behind a next arrow,
+// even though the server-rendered HTML contains every day through 2028. Page
+// forward until the target day exists. The arrow carries no label or testid,
+// so mark it in-page: inside the calendar, the nav buttons are the icon-only
+// ones that aren't day cells. Fall back to react-aria's PageDown handling.
+async function pageCalendarTo(page, targetIso, log, maxPages = 40) {
+  const cell = `[data-testid="calendar-cell-ui"][data-date="${targetIso}"]`;
+
+  for (let i = 0; i <= maxPages; i++) {
+    if (await page.locator(cell).first().count()) {
+      if (i) log(`paged ${i}x to reach ${targetIso}`);
+      return true;
+    }
+
+    const advanced = await page
+      .evaluate(() => {
+        const cal = document.querySelector('[data-testid="calendar-ui"]');
+        if (!cal) return false;
+        const navs = [...cal.querySelectorAll('button')].filter(
+          (b) => !b.closest('[data-testid="calendar-cell-ui"]') && !b.innerText.trim()
+        );
+        const next = navs[navs.length - 1]; // rightmost icon button = next
+        if (!next || next.disabled) return false;
+        next.click();
+        return true;
+      })
+      .catch(() => false);
+
+    if (!advanced) {
+      await page.keyboard.press('PageDown').catch(() => {});
+    }
+    await sleep(600);
+  }
+  return false;
+}
+
 // Selecting a resort kicks off a fetch that covers the form with a loading
 // overlay; clicking through it silently does nothing, so always settle first.
 async function waitIdle(page) {
@@ -201,11 +257,11 @@ async function fillVacationForm(page, checkIn, checkOut) {
   }
 
   for (const [label, d] of [['check-in', checkIn], ['check-out', checkOut]]) {
-    const cell = page.locator(`[data-testid="calendar-cell-ui"][data-date="${isoDate(d)}"]`).first();
-    if (!(await cell.waitFor({ state: 'attached', timeout: 15000 }).then(() => true).catch(() => false))) {
+    if (!(await pageCalendarTo(page, isoDate(d), log))) {
       await dumpCalendarDiagnostics(page, checkIn, log);
       throw new Error(`${label} cell ${isoDate(d)} never rendered`);
     }
+    const cell = page.locator(`[data-testid="calendar-cell-ui"][data-date="${isoDate(d)}"]`).first();
     await cell.scrollIntoViewIfNeeded().catch(() => {});
     if ((await cell.getAttribute('data-disabled').catch(() => null)) === 'true') {
       throw new Error(`${label} ${isoDate(d)} is unavailable`);
@@ -317,6 +373,7 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
   try {
     await page.goto('https://obe.beaches.com/', { waitUntil: 'domcontentloaded', timeout: 60000 });
     await sleep(6000); // let React hydrate the form
+    await dismissOverlays(page);
 
     await fillVacationForm(page, checkIn, checkOut);
 
@@ -324,7 +381,10 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
       await page.screenshot({ path: `./results/step1_filled_${isoDate(checkIn)}.png` }).catch(() => {});
     }
 
-    await page.locator('[data-testid="form-vacation-submit-button-ui"]').click();
+    // The cookie banner is pinned to the bottom of the viewport, right where
+    // CONTINUE sits, so clear it again before committing the form.
+    await dismissOverlays(page);
+    await page.locator('[data-testid="form-vacation-submit-button-ui"]').click({ force: true });
     if (TEST_MODE) console.log('    submitted → waiting for room results');
 
     // Wait for the ROOM step to actually render rather than sleeping blindly.
