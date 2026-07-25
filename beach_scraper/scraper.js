@@ -25,15 +25,26 @@ function isoDate(date) {
   return date.toISOString().slice(0, 10);
 }
 
+function combo(checkInIso, nights) {
+  const checkIn = new Date(checkInIso);
+  const checkOut = new Date(checkIn);
+  checkOut.setDate(checkOut.getDate() + nights);
+  return { checkIn, checkOut, nights };
+}
+
 // Build every (checkIn, nights) combination we want to search
 function buildSearchDates() {
   if (process.env.TEST_MODE === 'true') {
     // 3 representative combos spread across the search window
-    return [
-      { checkIn: new Date('2026-12-20'), checkOut: new Date('2026-12-27'), nights: 7 },
-      { checkIn: new Date('2027-02-10'), checkOut: new Date('2027-02-16'), nights: 6 },
-      { checkIn: new Date('2027-04-05'), checkOut: new Date('2027-04-13'), nights: 8 },
-    ];
+    return [combo('2026-12-20', 7), combo('2027-02-10', 6), combo('2027-04-05', 8)];
+  }
+
+  // Holds the start date fixed and varies only the stay length, to measure
+  // whether +/-1 night moves the per-night rate enough to be worth scraping.
+  // Three start dates: holiday peak, mid-season, and shoulder.
+  if (process.env.PROBE_MODE === 'true') {
+    const starts = ['2026-12-20', '2027-02-10', '2027-04-05'];
+    return starts.flatMap((s) => config.stayLengths.map((n) => combo(s, n)));
   }
 
   const combos = [];
@@ -70,18 +81,21 @@ function ensureResultsDir() {
 function appendRow(row) {
   const file = config.resultsFile;
   const isNew = !fs.existsSync(file);
+  // Totals are not comparable across stay lengths, so carry the per-night rate.
+  const perNight = row.price ? Math.round(row.price / row.nights) : '';
   const line = [
     row.checkIn,
     row.checkOut,
     row.nights,
     row.price ?? '',
-    row.roomType ?? '',
-    row.status,
+    perNight,
+    `"${(row.roomType ?? '').replace(/"/g, '""')}"`,
+    `"${String(row.status).replace(/"/g, '""')}"`, // error text contains commas
     row.scrapedAt,
   ].join(',');
 
   if (isNew) {
-    fs.writeFileSync(file, 'checkIn,checkOut,nights,price,roomType,status,scrapedAt\n');
+    fs.writeFileSync(file, 'checkIn,checkOut,nights,price,pricePerNight,roomType,status,scrapedAt\n');
   }
   fs.appendFileSync(file, line + '\n');
 }
@@ -101,8 +115,26 @@ function writeSummary(results) {
   const rows = top10
     .map(
       (r) =>
-        `| ${r.checkIn} | ${r.checkOut} | ${r.nights} nights | $${r.price.toLocaleString()} | ${r.roomType} |`
+        `| ${r.checkIn} | ${r.checkOut} | ${r.nights} nights | $${r.price.toLocaleString()} | ` +
+        `$${Math.round(r.price / r.nights).toLocaleString()} | ${r.roomType} |`
     )
+    .join('\n');
+
+  // Group by start date so varying the stay length is directly comparable.
+  const byStart = new Map();
+  for (const r of found) {
+    if (!byStart.has(r.checkIn)) byStart.set(r.checkIn, []);
+    byStart.get(r.checkIn).push(r);
+  }
+  const lengthRows = [...byStart.entries()]
+    .filter(([, rs]) => rs.length > 1)
+    .map(([start, rs]) => {
+      rs.sort((a, b) => a.nights - b.nights);
+      const cells = rs.map((r) => `${r.nights}n $${Math.round(r.price / r.nights).toLocaleString()}`);
+      const rates = rs.map((r) => r.price / r.nights);
+      const spread = Math.round(((Math.max(...rates) - Math.min(...rates)) / Math.min(...rates)) * 100);
+      return `| ${start} | ${cells.join(' · ')} | ${spread}% |`;
+    })
     .join('\n');
 
   const summary = `# Beaches TCI Price Summary
@@ -110,12 +142,21 @@ Run: ${new Date().toISOString()}
 
 ## Top 10 Cheapest Options
 
-| Check In | Check Out | Stay | Price (USD) | Room |
-|----------|-----------|------|-------------|------|
+| Check In | Check Out | Stay | Total (USD) | Per night | Room |
+|----------|-----------|------|-------------|-----------|------|
 ${rows}
 
 *Showing cheapest available room per date combination.*
-`;
+${lengthRows ? `
+## Effect of stay length (same start date)
+
+| Check In | Per-night rate by stay length | Spread |
+|----------|-------------------------------|--------|
+${lengthRows}
+
+*Spread is the gap between the cheapest and priciest per-night rate for that
+start date. A small spread means +/-1 night is not worth scraping separately.*
+` : ''}`;
 
   fs.writeFileSync(config.summaryFile, summary);
   console.log('\n── Top 5 deals ──');
