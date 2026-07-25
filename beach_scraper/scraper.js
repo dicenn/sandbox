@@ -246,18 +246,25 @@ async function waitIdle(page) {
   await sleep(800);
 }
 
-// Click without letting a floating widget steal it. Playwright's force:true
-// still dispatches at real coordinates, so an overlay sitting on top receives
-// the event instead; a programmatic click ignores geometry entirely. react-aria
-// treats a detail=0 click as a virtual (assistive-tech) press, so this does
-// drive its handlers. Fall back to a real click for anything that needs one.
-async function robustClick(locator) {
-  const programmatic = await locator
-    .evaluate((el) => el.click())
-    .then(() => true)
-    .catch(() => false);
-  if (programmatic) return true;
+// Two ways to click, because neither is sufficient alone.
+//
+// 'real' dispatches actual pointer events, which is what react-aria's usePress
+// listens for — programmatic clicks do NOT open its popovers (run 9 regression).
+// 'dom' ignores geometry, which is the only way through an overlay that is
+// sitting on top of the target.
+//
+// A 'dom' click always "succeeds" mechanically even when no handler reacts, so
+// it can never be trusted on its own: callers must verify the intended effect.
+async function clickWith(locator, mode) {
+  if (mode === 'dom') {
+    return locator.evaluate((el) => el.click()).then(() => true).catch(() => false);
+  }
   return locator.click({ force: true, timeout: 5000 }).then(() => true).catch(() => false);
+}
+
+async function robustClick(locator) {
+  if (await clickWith(locator, 'real')) return true;
+  return clickWith(locator, 'dom');
 }
 
 // Open a popover and confirm it actually rendered. The trigger is a react-aria
@@ -266,16 +273,19 @@ async function openPopover(page, triggerTestId, panelTestId, log) {
   const trigger = page.locator(`[data-testid="${triggerTestId}"] [data-testid="button-ui"]`).first();
   const panel = page.locator(`[data-testid="${panelTestId}"]`).first();
 
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  // Real clicks drive react-aria; the dom pass is only there in case something
+  // is covering the trigger despite the sweeper.
+  const modes = ['real', 'dom', 'real'];
+  for (let attempt = 0; attempt < modes.length; attempt++) {
     await waitIdle(page);
     await killChatWidget(page); // it re-opens on its own timer
-    await robustClick(trigger);
+    await clickWith(trigger, modes[attempt]);
 
     if (await panel.waitFor({ state: 'visible', timeout: 8000 }).then(() => true).catch(() => false)) {
-      log(`${panelTestId} opened (attempt ${attempt})`);
+      log(`${panelTestId} opened (${modes[attempt]} click, attempt ${attempt + 1})`);
       return true;
     }
-    log(`${panelTestId} did not open, retrying (${attempt}/3)`);
+    log(`${panelTestId} did not open via ${modes[attempt]} click (${attempt + 1}/${modes.length})`);
   }
   return false;
 }
