@@ -156,6 +156,7 @@ async function dismissOverlays(page) {
     'button:has-text("Accept All")',
     '#onetrust-accept-btn-handler',
     '[class*="ketch"] button:has-text("Accept")',
+    ':text("HIDE CHAT")',
     'button[aria-label*="close" i]',
     'button[title*="close" i]',
   ];
@@ -166,6 +167,27 @@ async function dismissOverlays(page) {
       await sleep(400);
     }
   }
+  await killChatWidget(page);
+}
+
+// The NICE CXone chat panel auto-expands over the "Number of Guests" field,
+// which is what ate the guest-counter click. Clicking HIDE CHAT is unreliable
+// (it lives in an iframe), so remove the widget outright. Scoped to pinned,
+// high-z-index nodes whose id/class/src names a chat vendor, to avoid
+// deleting anything belonging to the booking form itself.
+async function killChatWidget(page) {
+  await page
+    .evaluate(() => {
+      const vendor = /chat|cxone|gomoxie|inqms|nice-?incontact|livechat/i;
+      for (const el of document.querySelectorAll('body *')) {
+        const cs = getComputedStyle(el);
+        if (cs.position !== 'fixed' && cs.position !== 'absolute') continue;
+        if ((parseInt(cs.zIndex, 10) || 0) < 100) continue;
+        const id = `${el.id} ${el.className} ${el.tagName === 'IFRAME' ? el.src : ''}`;
+        if (vendor.test(id)) el.remove();
+      }
+    })
+    .catch(() => {});
 }
 
 // The hydrated calendar only mounts two months at a time behind a next arrow,
@@ -338,36 +360,62 @@ async function setCounter(page, name, target, log) {
   log(`${name} = ${current} (wanted ${target})`);
 }
 
+// Room rates never arrive as JSON — the OBE server-renders the room step, so
+// the prices only exist in the DOM. Pull every "$N,NNN" that sits in its own
+// element, then walk up to the surrounding card to name the room.
+async function extractRoomsFromDom(page) {
+  return page
+    .evaluate(() => {
+      const rooms = [];
+      for (const el of document.querySelectorAll('div,span,p,strong,h1,h2,h3,h4,h5')) {
+        const own = [...el.childNodes]
+          .filter((n) => n.nodeType === Node.TEXT_NODE)
+          .map((n) => n.textContent)
+          .join('')
+          .trim();
+
+        const m = own.match(/^\$\s?([\d,]+)$/);
+        if (!m) continue;
+        const price = parseInt(m[1].replace(/,/g, ''), 10);
+        if (!Number.isFinite(price) || price < 500) continue; // skip fees/discounts
+
+        // Climb to the card: the first ancestor that reads like a room block.
+        let node = el;
+        let roomType = 'Unknown room';
+        for (let i = 0; i < 8 && node.parentElement; i++) {
+          node = node.parentElement;
+          const lines = node.innerText.split('\n').map((s) => s.trim()).filter(Boolean);
+          if (lines.length >= 3 && !lines[0].includes('$') && lines[0].length > 5 && lines[0].length < 120) {
+            roomType = lines[0];
+            break;
+          }
+        }
+        rooms.push({ price, roomType });
+      }
+
+      // Same room can surface more than once; keep one entry per name+price.
+      const seen = new Set();
+      return rooms.filter((r) => {
+        const k = `${r.roomType}|${r.price}`;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+    })
+    .catch(() => []);
+}
+
 async function interceptPriceSearch(page, checkIn, checkOut) {
-  const NOISY = ['datadoghq', 'ketchcdn', 'gomoxie', 'pinterest', 'reddit', 'yimg',
-                 'xu-09276', 'google', 'facebook', 'tealiumiq', 'demdex', 'adobedtm'];
-  const isNoisy = (u) => NOISY.some((n) => u.includes(n));
-
-  let best = null;
-  const captured = [];
-
+  // The OBE echoes the search back on this endpoint, which is the only
+  // trustworthy confirmation that the form applied what we intended.
+  let vacation = null;
   const resHandler = async (response) => {
-    const url = response.url();
-    if (isNoisy(url)) return;
-    if (!(response.headers()['content-type'] || '').includes('json')) return;
-
-    let text;
-    try { text = await response.text(); } catch { return; }
-    if (text.length < 40) return;
-
-    let json;
-    try { json = JSON.parse(text); } catch { return; }
-
-    const cheapest = extractCheapestRate(json);
-    if (cheapest && (!best || cheapest.price < best.price)) {
-      best = cheapest;
-      if (TEST_MODE) console.log(`    ✓ price candidate $${cheapest.price} — ${cheapest.roomType}`);
-    }
-
-    // In TEST_MODE keep the raw bodies so we can write an exact extractor later.
-    if (TEST_MODE && text.length > 200) captured.push({ url, body: text.slice(0, 20000) });
+    if (!response.url().includes('/api/session/subSession/data')) return;
+    try {
+      const j = await response.json();
+      if (j && j.vacation && j.vacation.rstCode) vacation = j.vacation;
+    } catch {}
   };
-
   page.on('response', resHandler);
 
   try {
@@ -387,252 +435,41 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     await page.locator('[data-testid="form-vacation-submit-button-ui"]').click({ force: true });
     if (TEST_MODE) console.log('    submitted → waiting for room results');
 
-    // Wait for the ROOM step to actually render rather than sleeping blindly.
+    // The room step announces itself with "N ROOMS FOUND".
     await page
-      .waitForFunction(() => /room/i.test(location.href) || /per (night|person)/i.test(document.body.innerText),
-                       { timeout: 45000 })
+      .getByText(/ROOMS FOUND/i)
+      .first()
+      .waitFor({ state: 'visible', timeout: 60000 })
       .catch(() => {});
-    await sleep(8000); // let all rate calls settle
+    await sleep(5000); // let the first batch of cards paint
+
+    const rooms = await extractRoomsFromDom(page);
+    rooms.sort((a, b) => a.price - b.price);
 
     if (TEST_MODE) {
       await page.screenshot({ path: `./results/step2_rooms_${isoDate(checkIn)}.png`, fullPage: true }).catch(() => {});
-      console.log(`    final URL: ${page.url()}`);
-      fs.writeFileSync(`./results/api_${isoDate(checkIn)}.json`, JSON.stringify(captured, null, 2));
-      console.log(`    captured ${captured.length} JSON responses`);
+      console.log(`    session echo: ${JSON.stringify(vacation && {
+        rst: vacation.rstCode, in: vacation.checkIn, out: vacation.checkOut,
+        adults: vacation.adults, children: vacation.children, air: vacation.airIncluded,
+      })}`);
+      console.log(`    ${rooms.length} rooms parsed; cheapest 3: ` +
+        rooms.slice(0, 3).map((r) => `$${r.price} ${r.roomType}`).join(' | '));
     }
+
+    // Refuse to record a price that was quoted for the wrong search.
+    const want = { in: isoDate(checkIn), out: isoDate(checkOut), children: config.occupancy.children.length };
+    if (vacation && (vacation.checkIn !== want.in || vacation.checkOut !== want.out ||
+                     vacation.children !== want.children || vacation.adults !== config.occupancy.adults)) {
+      throw new Error(
+        `search mismatch: got ${vacation.checkIn}..${vacation.checkOut} ` +
+        `${vacation.adults}a/${vacation.children}c, wanted ${want.in}..${want.out} ` +
+        `${config.occupancy.adults}a/${want.children}c`
+      );
+    }
+
+    return rooms[0] || null;
   } finally {
     page.off('response', resHandler);
-  }
-
-  return best;
-}
-
-// Walk a JSON blob looking for the cheapest room rate.
-// SynXis responses typically nest rates inside a RatePlans or Rooms array.
-function extractCheapestRate(json) {
-  const candidates = [];
-
-  function walk(obj) {
-    if (!obj || typeof obj !== 'object') return;
-    if (Array.isArray(obj)) {
-      obj.forEach(walk);
-      return;
-    }
-
-    // Common SynXis field names for rate amounts
-    const amount =
-      obj.TotalRate?.Amount ??
-      obj.RoomRate?.Amount ??
-      obj.Rate?.Amount ??
-      obj.AverageNightlyRate ??
-      obj.DisplayRate ??
-      obj.totalCost ??
-      obj.total ??
-      null;
-
-    const room =
-      obj.RoomType?.Name ??
-      obj.RoomTypeName ??
-      obj.RoomName ??
-      obj.roomName ??
-      obj.name ??
-      'Unknown room';
-
-    if (amount && typeof amount === 'number' && amount > 0) {
-      candidates.push({ price: Math.round(amount), roomType: room });
-    }
-
-    Object.values(obj).forEach(walk);
-  }
-
-  walk(json);
-
-  if (candidates.length === 0) return null;
-  candidates.sort((a, b) => a.price - b.price);
-  return candidates[0];
-}
-
-// ── DOM interaction ───────────────────────────────────────────────────────────
-
-async function setSearchDates(page, checkIn, checkOut) {
-  const checkInStr = formatDate(checkIn);
-  const checkOutStr = formatDate(checkOut);
-
-  // Try to find and update date inputs — selector names vary; these cover
-  // the most common patterns used by SynXis and similar booking engines.
-  const checkInSelectors = [
-    '[data-testid="check-in-date"]',
-    'input[name*="checkin" i]',
-    'input[name*="check-in" i]',
-    'input[name*="arrival" i]',
-    'input[placeholder*="Check-in" i]',
-    'input[placeholder*="Arrival" i]',
-    '#checkin',
-    '#arrivalDate',
-  ];
-
-  const checkOutSelectors = [
-    '[data-testid="check-out-date"]',
-    'input[name*="checkout" i]',
-    'input[name*="check-out" i]',
-    'input[name*="departure" i]',
-    'input[placeholder*="Check-out" i]',
-    'input[placeholder*="Departure" i]',
-    '#checkout',
-    '#departureDate',
-  ];
-
-  async function fillDate(selectors, value) {
-    for (const sel of selectors) {
-      const el = page.locator(sel).first();
-      if (await el.isVisible({ timeout: 1000 }).catch(() => false)) {
-        await el.fill('');
-        await el.type(value, { delay: 80 });
-        return true;
-      }
-    }
-    return false;
-  }
-
-  const filledIn = await fillDate(checkInSelectors, checkInStr);
-  const filledOut = await fillDate(checkOutSelectors, checkOutStr);
-
-  if (!filledIn || !filledOut) {
-    // If we can't find the inputs, the page structure changed — log and skip
-    console.warn(`  Could not locate date inputs for ${checkInStr}`);
-    return false;
-  }
-
-  // Submit / trigger search
-  const submitSelectors = [
-    'button[type="submit"]',
-    'button:has-text("Search")',
-    'button:has-text("Check Availability")',
-    'button:has-text("Find Rooms")',
-    '[data-testid="search-submit"]',
-  ];
-
-  for (const sel of submitSelectors) {
-    const btn = page.locator(sel).first();
-    if (await btn.isVisible({ timeout: 1000 }).catch(() => false)) {
-      await btn.click();
-      return true;
-    }
-  }
-
-  // If no submit button found, pressing Enter usually works
-  await page.keyboard.press('Enter');
-  return true;
-}
-
-async function setOccupancy(page) {
-  const { adults, children } = config.occupancy;
-
-  // Try common occupancy/guest selectors
-  const guestSelectors = [
-    '[data-testid="guests"]',
-    'button:has-text("Guests")',
-    'button:has-text("Occupancy")',
-    'button:has-text("Rooms & Guests")',
-    '[aria-label*="guest" i]',
-    '#guestSelector',
-  ];
-
-  let opened = false;
-  for (const sel of guestSelectors) {
-    const el = page.locator(sel).first();
-    if (await el.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await el.click();
-      opened = true;
-      break;
-    }
-  }
-
-  if (!opened) {
-    console.warn('  Could not open guest selector — skipping occupancy config');
-    return;
-  }
-
-  await sleep(1000);
-
-  // Set adults — look for +/- steppers or a select
-  await adjustCounter(page, 'adult', adults);
-
-  // Set children count first, then ages
-  await adjustCounter(page, 'child', children.length);
-  await sleep(500);
-
-  // Fill child ages/birthdates
-  for (let i = 0; i < children.length; i++) {
-    const age = ageAtDate(children[i].birthDate, new Date().toISOString().slice(0, 10));
-
-    // Some forms take age, some take birth year, some take birthdate
-    const ageSelectors = [
-      `select[name*="childAge${i}" i]`,
-      `select[name*="child${i}Age" i]`,
-      `input[name*="childAge${i}" i]`,
-      `[data-child-index="${i}"] select`,
-      `.child-age:nth-of-type(${i + 1})`,
-    ];
-
-    for (const sel of ageSelectors) {
-      const el = page.locator(sel).first();
-      if (await el.isVisible({ timeout: 1000 }).catch(() => false)) {
-        const tag = await el.evaluate((n) => n.tagName.toLowerCase());
-        if (tag === 'select') {
-          await el.selectOption({ value: String(age) }).catch(() =>
-            el.selectOption({ label: String(age) })
-          );
-        } else {
-          await el.fill(String(age));
-        }
-        break;
-      }
-    }
-  }
-}
-
-async function adjustCounter(page, type, targetCount) {
-  // Many booking engines use +/- buttons for guest counts
-  const incrementSelectors = [
-    `button[aria-label*="${type}" i][aria-label*="add" i]`,
-    `button[aria-label*="${type}" i][aria-label*="increase" i]`,
-    `[data-testid*="${type}-increment"]`,
-    `.${type}-count + button`,
-  ];
-
-  const countSelectors = [
-    `[data-testid*="${type}-count"]`,
-    `input[name*="${type}Count" i]`,
-    `span[class*="${type}Count" i]`,
-  ];
-
-  // Read current count
-  let current = 0;
-  for (const sel of countSelectors) {
-    const el = page.locator(sel).first();
-    if (await el.isVisible({ timeout: 1000 }).catch(() => false)) {
-      const text = await el.innerText().catch(() => '');
-      current = parseInt(text) || 0;
-      break;
-    }
-  }
-
-  const diff = targetCount - current;
-  if (diff === 0) return;
-
-  const action = diff > 0 ? 'add' : 'remove';
-  const absCount = Math.abs(diff);
-
-  for (const sel of incrementSelectors) {
-    const el = page.locator(sel.replace('add', action).replace('increase', action === 'add' ? 'increase' : 'decrease')).first();
-    if (await el.isVisible({ timeout: 1000 }).catch(() => false)) {
-      for (let i = 0; i < absCount; i++) {
-        await el.click();
-        await sleep(300);
-      }
-      return;
-    }
   }
 }
 
