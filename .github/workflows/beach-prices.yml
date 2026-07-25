@@ -5,6 +5,9 @@ on:
     # Every Monday at 8am UTC (4am ET / 1am PT) — change as you like
     - cron: '0 8 * * 1'
   workflow_dispatch: # also lets you trigger it manually from the GitHub UI
+  push:
+    branches: ['claude/beach-price-scraper-4jd7na']
+    paths: ['.github/workflows/beach-prices.yml']
 
 jobs:
   scrape:
