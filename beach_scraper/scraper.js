@@ -121,49 +121,64 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ── Core search ───────────────────────────────────────────────────────────────
 
-// Intercept the pricing API response instead of parsing the DOM.
-// Beaches uses the SynXis booking engine; it fires XHR calls with rate data
-// that are easier to parse than the rendered HTML.
+// Navigate directly to the OBE search URL for each date combo and intercept
+// the JSON API response that the React SPA fetches for room rates.
+// The OBE (obe.beaches.com) is the Beaches booking engine — confirmed URL pattern.
 async function interceptPriceSearch(page, checkIn, checkOut) {
+  const { adults, children } = config.occupancy;
+  const travelDate = isoDate(checkIn);
+  const childAgeParams = children
+    .map((c, i) => `child${i + 1}Age=${ageAtDate(c.birthDate, travelDate)}`)
+    .join('&');
+
+  const searchUrl =
+    'https://obe.beaches.com/beaches/search/' +
+    `?resortCode=BTCI` +
+    `&checkIn=${formatDate(checkIn)}` +
+    `&checkOut=${formatDate(checkOut)}` +
+    `&adults=${adults}` +
+    `&children=${children.length}` +
+    `&${childAgeParams}`;
+
   return new Promise(async (resolve) => {
     let resolved = false;
 
     const timeout = setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        resolve(null); // timed out waiting for price response
-      }
-    }, 30000);
+      if (!resolved) { resolved = true; resolve(null); }
+    }, 35000);
 
-    // Listen for the API response that contains room rates
-    page.on('response', async (response) => {
+    // The OBE React SPA calls an internal API for room rates.
+    // Intercept any JSON response that contains rate/price/room data.
+    const handler = async (response) => {
       if (resolved) return;
       const url = response.url();
+      const ct = response.headers()['content-type'] || '';
 
-      // SynXis / Beaches API endpoints that carry rate data
-      if (
-        url.includes('availability') ||
-        url.includes('rates') ||
-        url.includes('roomrates') ||
-        url.includes('GetRates') ||
-        url.includes('getavailability')
-      ) {
+      if (ct.includes('json') && (
+        url.includes('/room') ||
+        url.includes('/rate') ||
+        url.includes('/avail') ||
+        url.includes('/price') ||
+        url.includes('/search') ||
+        url.includes('api/')
+      )) {
         try {
           const json = await response.json();
           const cheapest = extractCheapestRate(json);
           if (cheapest) {
             clearTimeout(timeout);
             resolved = true;
+            page.off('response', handler);
             resolve(cheapest);
           }
         } catch {
-          // response wasn't JSON or didn't have rates — keep waiting
+          // not JSON or no rates in this response
         }
       }
-    });
+    };
 
-    // Trigger the search by setting dates in the form
-    await setSearchDates(page, checkIn, checkOut);
+    page.on('response', handler);
+    await page.goto(searchUrl, { waitUntil: 'networkidle', timeout: 30000 }).catch(() => {});
   });
 }
 
@@ -421,32 +436,15 @@ async function run() {
   const scrapedAt = new Date().toISOString();
 
   try {
-    console.log('Navigating to Beaches Turks & Caicos booking page...');
-    await page.goto('https://www.beaches.com/resorts/turks-caicos/', {
+    // Go directly to the OBE (Online Booking Engine) to skip the marketing site.
+    // Confirmed URL pattern: resortCode=BTCI for Turks & Caicos,
+    // dates in MM/DD/YYYY format, child ages as child1Age/child2Age params.
+    console.log('Initializing OBE session...');
+    await page.goto('https://obe.beaches.com/', {
       waitUntil: 'networkidle',
-      timeout: 60000,
+      timeout: 30000,
     });
-
-    // Accept cookies if prompted
-    const cookieSelectors = [
-      'button:has-text("Accept")',
-      'button:has-text("Accept All")',
-      'button:has-text("I Accept")',
-      '#onetrust-accept-btn-handler',
-    ];
-    for (const sel of cookieSelectors) {
-      const btn = page.locator(sel).first();
-      if (await btn.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await btn.click();
-        break;
-      }
-    }
-
     await sleep(2000);
-
-    // Set occupancy once (usually persists across searches on the same page)
-    await setOccupancy(page);
-    await sleep(1000);
 
     const combos = buildSearchDates();
     console.log(`Running ${combos.length} date combinations...`);
