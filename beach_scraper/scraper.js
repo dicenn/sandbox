@@ -27,6 +27,15 @@ function isoDate(date) {
 
 // Build every (checkIn, nights) combination we want to search
 function buildSearchDates() {
+  if (process.env.TEST_MODE === 'true') {
+    // 3 representative combos spread across the search window
+    return [
+      { checkIn: new Date('2026-12-20'), checkOut: new Date('2026-12-27'), nights: 7 },
+      { checkIn: new Date('2027-02-10'), checkOut: new Date('2027-02-16'), nights: 6 },
+      { checkIn: new Date('2027-04-05'), checkOut: new Date('2027-04-13'), nights: 8 },
+    ];
+  }
+
   const combos = [];
   const { searchMonths, searchYearStart, searchYearEnd, stayLengths } = config;
 
@@ -119,6 +128,8 @@ ${rows}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+const TEST_MODE = process.env.TEST_MODE === 'true';
+
 // ── Core search ───────────────────────────────────────────────────────────────
 
 // Navigate directly to the OBE search URL for each date combo and intercept
@@ -140,28 +151,41 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     `&children=${children.length}` +
     `&${childAgeParams}`;
 
+  if (TEST_MODE) console.log('  URL:', searchUrl);
+
   return new Promise(async (resolve) => {
     let resolved = false;
 
     const timeout = setTimeout(() => {
       if (!resolved) { resolved = true; resolve(null); }
-    }, 35000);
+    }, 45000);
 
-    // The OBE React SPA calls an internal API for room rates.
-    // Intercept any JSON response that contains rate/price/room data.
     const handler = async (response) => {
       if (resolved) return;
       const url = response.url();
       const ct = response.headers()['content-type'] || '';
 
-      if (ct.includes('json') && (
+      if (!ct.includes('json')) return;
+
+      // In test mode log every JSON response so we can identify the pricing endpoint
+      if (TEST_MODE) {
+        try {
+          const text = await response.text();
+          console.log(`  << JSON [${response.status()}] ${url.slice(0, 100)}`);
+          console.log(`     preview: ${text.slice(0, 200)}`);
+        } catch {}
+        return; // don't try to parse for price yet; we're just mapping endpoints
+      }
+
+      // Production: only look at likely pricing endpoints
+      if (
         url.includes('/room') ||
         url.includes('/rate') ||
         url.includes('/avail') ||
         url.includes('/price') ||
         url.includes('/search') ||
         url.includes('api/')
-      )) {
+      ) {
         try {
           const json = await response.json();
           const cheapest = extractCheapestRate(json);
@@ -181,7 +205,9 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     // 'domcontentloaded' instead of 'networkidle' — SPAs never fully idle
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
     // Give JS time to fire API calls after DOM is ready
-    await sleep(8000);
+    await sleep(TEST_MODE ? 20000 : 8000);
+
+    if (TEST_MODE && !resolved) { resolved = true; resolve(null); }
   });
 }
 
