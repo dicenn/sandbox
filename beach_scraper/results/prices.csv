@@ -1,4 +1,4 @@
 checkIn,checkOut,nights,price,roomType,status,scrapedAt
-2026-12-20,2026-12-27,7,,,error: search mismatch: got 2026-12-20..2026-12-27 2a/0c, wanted 2026-12-20..2026-12-27 2a/2c,2026-07-25T18:38:03.211Z
-2027-02-10,2027-02-16,6,,,error: search mismatch: got 2027-02-10..2027-02-16 2a/0c, wanted 2027-02-10..2027-02-16 2a/2c,2026-07-25T18:38:03.211Z
-2027-04-05,2027-04-13,8,,,error: search mismatch: got 2027-04-05..2027-04-13 2a/0c, wanted 2027-04-05..2027-04-13 2a/2c,2026-07-25T18:38:03.211Z
+2026-12-20,2026-12-27,7,,,error: calendar popover never opened,2026-07-25T18:48:36.049Z
+2027-02-10,2027-02-16,6,,,error: calendar popover never opened,2026-07-25T18:48:36.049Z
+2027-04-05,2027-04-13,8,,,error: calendar popover never opened,2026-07-25T18:48:36.049Z
