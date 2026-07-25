@@ -148,6 +148,37 @@ const TEST_MODE = process.env.TEST_MODE === 'true';
 //
 // Child birthdates are NOT collected here; the wizard asks for them at the later
 // GUESTS step, so room pricing only needs the adult/child counts.
+// Selecting a resort kicks off a fetch that covers the form with a loading
+// overlay; clicking through it silently does nothing, so always settle first.
+async function waitIdle(page) {
+  await page
+    .locator('[data-testid="loading-overlay-ui"]')
+    .waitFor({ state: 'hidden', timeout: 20000 })
+    .catch(() => {});
+  await sleep(800);
+}
+
+// Open a popover and confirm it actually rendered. The trigger is a react-aria
+// button whose panel mounts on demand, so a click that lands early is a no-op.
+async function openPopover(page, triggerTestId, panelTestId, log) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await waitIdle(page);
+    await page
+      .locator(`[data-testid="${triggerTestId}"] [data-testid="button-ui"]`)
+      .first()
+      .click({ force: true })
+      .catch(() => {});
+
+    const panel = page.locator(`[data-testid="${panelTestId}"]`).first();
+    if (await panel.waitFor({ state: 'visible', timeout: 8000 }).then(() => true).catch(() => false)) {
+      log(`${panelTestId} opened (attempt ${attempt})`);
+      return true;
+    }
+    log(`${panelTestId} did not open, retrying (${attempt}/3)`);
+  }
+  return false;
+}
+
 async function fillVacationForm(page, checkIn, checkOut) {
   const { adults, children } = config.occupancy;
   const log = (m) => TEST_MODE && console.log(`    ${m}`);
@@ -155,38 +186,67 @@ async function fillVacationForm(page, checkIn, checkOut) {
   // 1 ─ Resort (native <select>, so this is reliable)
   await page.selectOption('[data-testid="select-resort-ui"] select', 'BTC');
   log('resort = BTC');
-  await sleep(1500);
+  await waitIdle(page);
 
   // 2 ─ Decline flights, so the quote is room-only
   await page.locator('[data-testid="radio-no-flights-ui"]').check({ force: true });
   log('flights = no');
-  await sleep(1500);
+  await waitIdle(page);
 
-  // 3 ─ Dates. Open the popover, then click the two day cells by data-date.
-  await page.locator('[data-testid="select-dates-ui"]').getByRole('button').first().click();
-  await sleep(2000);
+  // 3 ─ Dates. One shared range calendar backs both the check-in and check-out
+  // triggers, so we open it once and click both day cells by data-date.
+  if (!(await openPopover(page, 'select-dates-ui', 'calendar-ui', log))) {
+    await dumpCalendarDiagnostics(page, checkIn, log);
+    throw new Error('calendar popover never opened');
+  }
 
   for (const [label, d] of [['check-in', checkIn], ['check-out', checkOut]]) {
     const cell = page.locator(`[data-testid="calendar-cell-ui"][data-date="${isoDate(d)}"]`).first();
+    if (!(await cell.waitFor({ state: 'attached', timeout: 15000 }).then(() => true).catch(() => false))) {
+      await dumpCalendarDiagnostics(page, checkIn, log);
+      throw new Error(`${label} cell ${isoDate(d)} never rendered`);
+    }
     await cell.scrollIntoViewIfNeeded().catch(() => {});
-    const disabled = await cell.getAttribute('data-disabled').catch(() => null);
-    if (disabled === 'true') throw new Error(`${label} ${isoDate(d)} is unavailable`);
+    if ((await cell.getAttribute('data-disabled').catch(() => null)) === 'true') {
+      throw new Error(`${label} ${isoDate(d)} is unavailable`);
+    }
     await cell.click({ force: true });
     log(`${label} = ${isoDate(d)}`);
-    await sleep(1200);
+    await sleep(1500);
   }
 
-  // Calendar usually auto-closes after the range completes; Escape if not.
+  // Calendar usually auto-closes once the range is complete; Escape if not.
   await page.keyboard.press('Escape').catch(() => {});
-  await sleep(1000);
+  await waitIdle(page);
 
   // 4 ─ Guests. Counters start at 2 adults / 0 children, so nudge to target.
-  await page.locator('[data-testid="select-guests-ui"]').getByRole('button').first().click();
-  await sleep(2000);
-  await setCounter(page, 'Adults', adults, log);
-  await setCounter(page, 'Children', children.length, log);
-  await page.keyboard.press('Escape').catch(() => {});
-  await sleep(1000);
+  if (await openPopover(page, 'select-guests-ui', 'counter-ui', log)) {
+    await setCounter(page, 'Adults', adults, log);
+    await setCounter(page, 'Children', children.length, log);
+    await page.keyboard.press('Escape').catch(() => {});
+  } else {
+    log('guest popover never opened — falling back to form defaults');
+  }
+  await waitIdle(page);
+}
+
+// When the calendar misbehaves, capture enough to fix it without another
+// blind round trip: what mounted, what the popover looks like, what is on screen.
+async function dumpCalendarDiagnostics(page, checkIn, log) {
+  const counts = await page
+    .evaluate(() => ({
+      calendarUi: document.querySelectorAll('[data-testid="calendar-ui"]').length,
+      cells: document.querySelectorAll('[data-testid="calendar-cell-ui"]').length,
+      dialogs: document.querySelectorAll('[role="dialog"]').length,
+      sampleDates: [...document.querySelectorAll('[data-testid="calendar-cell-ui"]')]
+        .slice(0, 5)
+        .map((n) => n.getAttribute('data-date')),
+    }))
+    .catch(() => null);
+  log(`calendar diagnostics: ${JSON.stringify(counts)}`);
+  await page
+    .screenshot({ path: `./results/calendar_fail_${isoDate(checkIn)}.png`, fullPage: true })
+    .catch(() => {});
 }
 
 // Drive one +/- stepper to a target value using its aria-labels.
