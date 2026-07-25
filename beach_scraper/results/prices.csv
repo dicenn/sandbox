@@ -1,4 +1,10 @@
-checkIn,checkOut,nights,price,roomType,status,scrapedAt
-2026-12-20,2026-12-27,7,23550,Key West One Bedroom Concierge Villa Suite,ok,2026-07-25T19:26:52.140Z
-2027-02-10,2027-02-16,6,14557,Seaside Honeymoon One Bedroom Concierge Villa Suite,ok,2026-07-25T19:26:52.140Z
-2027-04-05,2027-04-13,8,11490,French Village Luxury Room Double,ok,2026-07-25T19:26:52.140Z
+checkIn,checkOut,nights,price,pricePerNight,roomType,status,scrapedAt
+2026-12-20,2026-12-26,6,19634,3272,"Key West One Bedroom Concierge Villa Suite","ok",2026-07-25T19:58:51.376Z
+2026-12-20,2026-12-27,7,23550,3364,"Key West One Bedroom Concierge Villa Suite","ok",2026-07-25T19:58:51.376Z
+2026-12-20,2026-12-28,8,28166,3521,"Key West One Bedroom Concierge Suite","ok",2026-07-25T19:58:51.376Z
+2027-02-10,2027-02-16,6,14557,2426,"Seaside Honeymoon One Bedroom Concierge Villa Suite","ok",2026-07-25T19:58:51.376Z
+2027-02-10,2027-02-17,7,17823,2546,"Key West One Bedroom Concierge Suite","ok",2026-07-25T19:58:51.376Z
+2027-02-10,2027-02-18,8,20829,2604,"Key West One Bedroom Concierge Suite","ok",2026-07-25T19:58:51.376Z
+2027-04-05,2027-04-11,6,8530,1422,"French Village Luxury Room Double","ok",2026-07-25T19:58:51.376Z
+2027-04-05,2027-04-12,7,9948,1421,"French Village Luxury Room Double","ok",2026-07-25T19:58:51.376Z
+2027-04-05,2027-04-13,8,11490,1436,"French Village Luxury Room Double","ok",2026-07-25T19:58:51.376Z
