@@ -132,128 +132,159 @@ const TEST_MODE = process.env.TEST_MODE === 'true';
 
 // ── Core search ───────────────────────────────────────────────────────────────
 
-// OBE flow (confirmed from HTML inspection):
-//   1. Navigate to /beaches/search/?resortCode=BTC&... → redirects to /?subSessionId=XXX (step-1 form)
-//   2. React hydrates the pre-filled form (need ~5s)
-//   3. Click [data-testid="form-vacation-submit-button-ui"] → navigates to step-2 (room results)
-//   4. Step-2 fires the pricing API — intercept that JSON response
-async function interceptPriceSearch(page, checkIn, checkOut) {
+// The OBE ignores our URL query params — it always renders an EMPTY step-1
+// "VACATION" form (confirmed by screenshot: resort unselected, dates blank).
+// So we drive the form directly. Selectors below were all confirmed by
+// inspecting the served step-1 HTML:
+//
+//   [data-testid="select-resort-ui"] select    native <select>, BTC = Turks & Caicos
+//   [data-testid="radio-no-flights-ui"]        visually-hidden radio, value="false"
+//   [data-testid="select-dates-ui"]            opens the range calendar popover
+//   [data-testid="calendar-cell-ui"][data-date="YYYY-MM-DD"]
+//                                              every day Jul-2026..Dec-2028 is
+//                                              pre-rendered, so no month paging
+//   [data-testid="select-guests-ui"]           opens Adults/Children/Infants counters
+//   [data-testid="form-vacation-submit-button-ui"]  → advances to step-2 (ROOM)
+//
+// Child birthdates are NOT collected here; the wizard asks for them at the later
+// GUESTS step, so room pricing only needs the adult/child counts.
+async function fillVacationForm(page, checkIn, checkOut) {
   const { adults, children } = config.occupancy;
-  const travelDate = isoDate(checkIn);
-  const childAgeParams = children
-    .map((c, i) => `child${i + 1}Age=${ageAtDate(c.birthDate, travelDate)}`)
-    .join('&');
+  const log = (m) => TEST_MODE && console.log(`    ${m}`);
 
-  // Resort code is BTC (not BTCI) — confirmed from OBE HTML value="BTC"
-  const searchUrl =
-    'https://obe.beaches.com/beaches/search/' +
-    `?resortCode=BTC` +
-    `&checkIn=${formatDate(checkIn)}` +
-    `&checkOut=${formatDate(checkOut)}` +
-    `&adults=${adults}` +
-    `&children=${children.length}` +
-    `&${childAgeParams}`;
+  // 1 ─ Resort (native <select>, so this is reliable)
+  await page.selectOption('[data-testid="select-resort-ui"] select', 'BTC');
+  log('resort = BTC');
+  await sleep(1500);
 
-  if (TEST_MODE) console.log('  URL:', searchUrl);
+  // 2 ─ Decline flights, so the quote is room-only
+  await page.locator('[data-testid="radio-no-flights-ui"]').check({ force: true });
+  log('flights = no');
+  await sleep(1500);
 
-  const NOISY = ['datadoghq', 'ketchcdn', 'gomoxie', 'pinterest', 'reddit',
-                 'yimg', 'xu-09276', 'google', 'facebook', 'tealiumiq', 'demdex'];
+  // 3 ─ Dates. Open the popover, then click the two day cells by data-date.
+  await page.locator('[data-testid="select-dates-ui"]').getByRole('button').first().click();
+  await sleep(2000);
+
+  for (const [label, d] of [['check-in', checkIn], ['check-out', checkOut]]) {
+    const cell = page.locator(`[data-testid="calendar-cell-ui"][data-date="${isoDate(d)}"]`).first();
+    await cell.scrollIntoViewIfNeeded().catch(() => {});
+    const disabled = await cell.getAttribute('data-disabled').catch(() => null);
+    if (disabled === 'true') throw new Error(`${label} ${isoDate(d)} is unavailable`);
+    await cell.click({ force: true });
+    log(`${label} = ${isoDate(d)}`);
+    await sleep(1200);
+  }
+
+  // Calendar usually auto-closes after the range completes; Escape if not.
+  await page.keyboard.press('Escape').catch(() => {});
+  await sleep(1000);
+
+  // 4 ─ Guests. Counters start at 2 adults / 0 children, so nudge to target.
+  await page.locator('[data-testid="select-guests-ui"]').getByRole('button').first().click();
+  await sleep(2000);
+  await setCounter(page, 'Adults', adults, log);
+  await setCounter(page, 'Children', children.length, log);
+  await page.keyboard.press('Escape').catch(() => {});
+  await sleep(1000);
+}
+
+// Drive one +/- stepper to a target value using its aria-labels.
+async function setCounter(page, name, target, log) {
+  const inc = page.locator(`[aria-label="Increase ${name}"]`).first();
+  const dec = page.locator(`[aria-label="Decrease ${name}"]`).first();
+
+  // The current value is the only number rendered inside the counter row.
+  const readValue = async () => {
+    const txt = await page
+      .locator(`[data-testid="counter-ui"]:has([aria-label="Increase ${name}"])`)
+      .first()
+      .innerText()
+      .catch(() => '');
+    const m = txt.match(/\d+/);
+    return m ? parseInt(m[0], 10) : null;
+  };
+
+  let current = await readValue();
+  if (current === null) {
+    log(`${name}: could not read counter, skipping`);
+    return;
+  }
+
+  let guard = 0;
+  while (current !== target && guard++ < 10) {
+    await (current < target ? inc : dec).click({ force: true }).catch(() => {});
+    await sleep(700);
+    const next = await readValue();
+    if (next === null || next === current) break; // stopped responding — bail
+    current = next;
+  }
+  log(`${name} = ${current} (wanted ${target})`);
+}
+
+async function interceptPriceSearch(page, checkIn, checkOut) {
+  const NOISY = ['datadoghq', 'ketchcdn', 'gomoxie', 'pinterest', 'reddit', 'yimg',
+                 'xu-09276', 'google', 'facebook', 'tealiumiq', 'demdex', 'adobedtm'];
   const isNoisy = (u) => NOISY.some((n) => u.includes(n));
 
-  return new Promise(async (resolve) => {
-    let resolved = false;
+  let best = null;
+  const captured = [];
 
-    const done = (val) => {
-      if (resolved) return;
-      resolved = true;
-      clearTimeout(timeoutHandle);
-      page.off('response', resHandler);
-      if (TEST_MODE) page.off('request', reqHandler);
-      resolve(val);
-    };
+  const resHandler = async (response) => {
+    const url = response.url();
+    if (isNoisy(url)) return;
+    if (!(response.headers()['content-type'] || '').includes('json')) return;
 
-    const timeoutHandle = setTimeout(() => done(null), 65000);
+    let text;
+    try { text = await response.text(); } catch { return; }
+    if (text.length < 40) return;
 
-    // In TEST_MODE log every outgoing request so we can see exactly what the SPA calls
-    const reqHandler = (request) => {
-      const u = request.url();
-      if (isNoisy(u)) return;
-      console.log(`  >> ${request.method()} ${u.slice(0, 120)}`);
-      const pd = request.postData();
-      if (pd) console.log(`     body: ${pd.slice(0, 300)}`);
-    };
+    let json;
+    try { json = JSON.parse(text); } catch { return; }
 
-    const resHandler = async (response) => {
-      if (resolved) return;
-      const url = response.url();
-      if (isNoisy(url)) return;
-      const ct = response.headers()['content-type'] || '';
-      if (!ct.includes('json')) return;
+    const cheapest = extractCheapestRate(json);
+    if (cheapest && (!best || cheapest.price < best.price)) {
+      best = cheapest;
+      if (TEST_MODE) console.log(`    ✓ price candidate $${cheapest.price} — ${cheapest.roomType}`);
+    }
 
-      try {
-        const text = await response.text();
-        if (TEST_MODE) {
-          console.log(`  << JSON [${response.status()}] ${url.slice(0, 120)}`);
-          console.log(`     preview: ${text.slice(0, 400)}`);
-        }
+    // In TEST_MODE keep the raw bodies so we can write an exact extractor later.
+    if (TEST_MODE && text.length > 200) captured.push({ url, body: text.slice(0, 20000) });
+  };
 
-        let json;
-        try { json = JSON.parse(text); } catch { return; }
+  page.on('response', resHandler);
 
-        const cheapest = extractCheapestRate(json);
-        if (cheapest) {
-          if (TEST_MODE) console.log(`  ✓ Found price: $${cheapest.price} — ${cheapest.roomType}`);
-          done(cheapest);
-        }
-      } catch {}
-    };
+  try {
+    await page.goto('https://obe.beaches.com/', { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await sleep(6000); // let React hydrate the form
 
-    if (TEST_MODE) page.on('request', reqHandler);
-    page.on('response', resHandler);
-
-    // Step 1: load the search URL — OBE redirects to /?subSessionId=XXX (step-1 form)
-    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
-
-    // Wait for React to hydrate and pre-fill the form with our URL params
-    await sleep(6000);
+    await fillVacationForm(page, checkIn, checkOut);
 
     if (TEST_MODE) {
-      const shot1 = `./results/screenshot_step1_${isoDate(checkIn)}.png`;
-      await page.screenshot({ path: shot1, fullPage: false }).catch(() => {});
-      console.log(`  📸 step-1 screenshot → ${shot1}`);
-      console.log(`  Current URL: ${page.url()}`);
+      await page.screenshot({ path: `./results/step1_filled_${isoDate(checkIn)}.png` }).catch(() => {});
     }
 
-    // Step 2: click the submit button — confirmed selector from OBE HTML inspection
-    const submitBtn = page.locator('[data-testid="form-vacation-submit-button-ui"]');
-    const btnVisible = await submitBtn.isVisible({ timeout: 8000 }).catch(() => false);
+    await page.locator('[data-testid="form-vacation-submit-button-ui"]').click();
+    if (TEST_MODE) console.log('    submitted → waiting for room results');
 
-    if (btnVisible) {
-      console.log('  Clicking submit...');
-      await submitBtn.click().catch((e) => console.log(`  Click error: ${e.message}`));
+    // Wait for the ROOM step to actually render rather than sleeping blindly.
+    await page
+      .waitForFunction(() => /room/i.test(location.href) || /per (night|person)/i.test(document.body.innerText),
+                       { timeout: 45000 })
+      .catch(() => {});
+    await sleep(8000); // let all rate calls settle
 
-      if (TEST_MODE) {
-        await sleep(4000);
-        const shot2 = `./results/screenshot_step2_${isoDate(checkIn)}.png`;
-        await page.screenshot({ path: shot2, fullPage: false }).catch(() => {});
-        console.log(`  📸 step-2 screenshot → ${shot2}`);
-        console.log(`  Current URL: ${page.url()}`);
-        // Wait up to 25s more for the pricing API to respond
-        await sleep(25000);
-      } else {
-        // Production: wait up to 35s for the pricing API response
-        await sleep(35000);
-      }
-    } else {
-      console.log('  Submit button not found — page HTML snippet:');
-      if (TEST_MODE) {
-        const html = await page.content().catch(() => '');
-        console.log(html.slice(0, 3000));
-      }
+    if (TEST_MODE) {
+      await page.screenshot({ path: `./results/step2_rooms_${isoDate(checkIn)}.png`, fullPage: true }).catch(() => {});
+      console.log(`    final URL: ${page.url()}`);
+      fs.writeFileSync(`./results/api_${isoDate(checkIn)}.json`, JSON.stringify(captured, null, 2));
+      console.log(`    captured ${captured.length} JSON responses`);
     }
+  } finally {
+    page.off('response', resHandler);
+  }
 
-    done(null);
-  });
+  return best;
 }
 
 // Walk a JSON blob looking for the cheapest room rate.
@@ -510,16 +541,8 @@ async function run() {
   const scrapedAt = new Date().toISOString();
 
   try {
-    // Go directly to the OBE (Online Booking Engine) to skip the marketing site.
-    // Confirmed URL pattern: resortCode=BTCI for Turks & Caicos,
-    // dates in MM/DD/YYYY format, child ages as child1Age/child2Age params.
-    console.log('Initializing OBE session...');
-    await page.goto('https://obe.beaches.com/', {
-      waitUntil: 'domcontentloaded',
-      timeout: 60000,
-    });
-    await sleep(2000);
-
+    // Each combo loads the OBE fresh and drives the step-1 form itself,
+    // so there is no shared session to set up here.
     const combos = buildSearchDates();
     console.log(`Running ${combos.length} date combinations...`);
 
