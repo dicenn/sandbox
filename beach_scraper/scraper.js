@@ -132,9 +132,11 @@ const TEST_MODE = process.env.TEST_MODE === 'true';
 
 // ── Core search ───────────────────────────────────────────────────────────────
 
-// Navigate directly to the OBE search URL for each date combo and intercept
-// the JSON API response that the React SPA fetches for room rates.
-// The OBE (obe.beaches.com) is the Beaches booking engine — confirmed URL pattern.
+// OBE flow (confirmed from HTML inspection):
+//   1. Navigate to /beaches/search/?resortCode=BTC&... → redirects to /?subSessionId=XXX (step-1 form)
+//   2. React hydrates the pre-filled form (need ~5s)
+//   3. Click [data-testid="form-vacation-submit-button-ui"] → navigates to step-2 (room results)
+//   4. Step-2 fires the pricing API — intercept that JSON response
 async function interceptPriceSearch(page, checkIn, checkOut) {
   const { adults, children } = config.occupancy;
   const travelDate = isoDate(checkIn);
@@ -142,9 +144,10 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     .map((c, i) => `child${i + 1}Age=${ageAtDate(c.birthDate, travelDate)}`)
     .join('&');
 
+  // Resort code is BTC (not BTCI) — confirmed from OBE HTML value="BTC"
   const searchUrl =
     'https://obe.beaches.com/beaches/search/' +
-    `?resortCode=BTCI` +
+    `?resortCode=BTC` +
     `&checkIn=${formatDate(checkIn)}` +
     `&checkOut=${formatDate(checkOut)}` +
     `&adults=${adults}` +
@@ -153,105 +156,103 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
 
   if (TEST_MODE) console.log('  URL:', searchUrl);
 
+  const NOISY = ['datadoghq', 'ketchcdn', 'gomoxie', 'pinterest', 'reddit',
+                 'yimg', 'xu-09276', 'google', 'facebook', 'tealiumiq', 'demdex'];
+  const isNoisy = (u) => NOISY.some((n) => u.includes(n));
+
   return new Promise(async (resolve) => {
     let resolved = false;
 
-    const timeout = setTimeout(() => {
-      if (!resolved) { resolved = true; resolve(null); }
-    }, 45000);
+    const done = (val) => {
+      if (resolved) return;
+      resolved = true;
+      clearTimeout(timeoutHandle);
+      page.off('response', resHandler);
+      if (TEST_MODE) page.off('request', reqHandler);
+      resolve(val);
+    };
 
-    // Log ALL outgoing requests in test mode so we can see what the SPA sends
+    const timeoutHandle = setTimeout(() => done(null), 65000);
+
+    // In TEST_MODE log every outgoing request so we can see exactly what the SPA calls
     const reqHandler = (request) => {
       const u = request.url();
-      if (!u.includes('datadoghq') && !u.includes('ketchcdn') && !u.includes('gomoxie') &&
-          !u.includes('pinterest') && !u.includes('reddit') && !u.includes('yimg') &&
-          !u.includes('xu-09276') && !u.includes('google') && !u.includes('facebook')) {
-        console.log(`  >> ${request.method()} ${u.slice(0, 120)}`);
-        const pd = request.postData();
-        if (pd) console.log(`     body: ${pd.slice(0, 200)}`);
-      }
+      if (isNoisy(u)) return;
+      console.log(`  >> ${request.method()} ${u.slice(0, 120)}`);
+      const pd = request.postData();
+      if (pd) console.log(`     body: ${pd.slice(0, 300)}`);
     };
 
     const resHandler = async (response) => {
       if (resolved) return;
       const url = response.url();
+      if (isNoisy(url)) return;
       const ct = response.headers()['content-type'] || '';
-
       if (!ct.includes('json')) return;
 
-      if (TEST_MODE) {
-        // Skip analytics noise, log everything else
-        if (!url.includes('datadoghq') && !url.includes('ketchcdn') && !url.includes('gomoxie') &&
-            !url.includes('pinterest') && !url.includes('reddit') && !url.includes('yimg') &&
-            !url.includes('xu-09276') && !url.includes('google') && !url.includes('facebook')) {
-          try {
-            const text = await response.text();
-            console.log(`  << JSON [${response.status()}] ${url.slice(0, 120)}`);
-            console.log(`     preview: ${text.slice(0, 300)}`);
-          } catch {}
+      try {
+        const text = await response.text();
+        if (TEST_MODE) {
+          console.log(`  << JSON [${response.status()}] ${url.slice(0, 120)}`);
+          console.log(`     preview: ${text.slice(0, 400)}`);
         }
-        return;
-      }
 
-      // Production: only look at likely pricing endpoints
-      if (
-        url.includes('/room') ||
-        url.includes('/rate') ||
-        url.includes('/avail') ||
-        url.includes('/price') ||
-        url.includes('/search') ||
-        url.includes('api/')
-      ) {
-        try {
-          const json = await response.json();
-          const cheapest = extractCheapestRate(json);
-          if (cheapest) {
-            clearTimeout(timeout);
-            resolved = true;
-            page.off('response', resHandler);
-            resolve(cheapest);
-          }
-        } catch {}
-      }
+        let json;
+        try { json = JSON.parse(text); } catch { return; }
+
+        const cheapest = extractCheapestRate(json);
+        if (cheapest) {
+          if (TEST_MODE) console.log(`  ✓ Found price: $${cheapest.price} — ${cheapest.roomType}`);
+          done(cheapest);
+        }
+      } catch {}
     };
 
     if (TEST_MODE) page.on('request', reqHandler);
     page.on('response', resHandler);
 
+    // Step 1: load the search URL — OBE redirects to /?subSessionId=XXX (step-1 form)
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
-    await sleep(5000);
+
+    // Wait for React to hydrate and pre-fill the form with our URL params
+    await sleep(6000);
 
     if (TEST_MODE) {
-      // Screenshot shows us what the page actually rendered
-      const shot = `./results/screenshot_combo${isoDate(checkIn)}.png`;
-      await page.screenshot({ path: shot, fullPage: false }).catch(() => {});
-      console.log(`  📸 screenshot → ${shot}`);
-
-      // Try clicking any visible search/availability button to trigger the price fetch
-      const searchTriggers = [
-        'button:has-text("Search")',
-        'button:has-text("Check Availability")',
-        'button:has-text("Find Rooms")',
-        'button:has-text("Book")',
-        '[data-testid*="search"]',
-      ];
-      for (const sel of searchTriggers) {
-        const btn = page.locator(sel).first();
-        if (await btn.isVisible({ timeout: 1000 }).catch(() => false)) {
-          console.log(`  Clicking: ${sel}`);
-          await btn.click().catch(() => {});
-          break;
-        }
-      }
-
-      // Wait another 20s for any price API call to fire after the click
-      await sleep(20000);
-      page.off('request', reqHandler);
-    } else {
-      await sleep(8000);
+      const shot1 = `./results/screenshot_step1_${isoDate(checkIn)}.png`;
+      await page.screenshot({ path: shot1, fullPage: false }).catch(() => {});
+      console.log(`  📸 step-1 screenshot → ${shot1}`);
+      console.log(`  Current URL: ${page.url()}`);
     }
 
-    if (!resolved) { resolved = true; resolve(null); }
+    // Step 2: click the submit button — confirmed selector from OBE HTML inspection
+    const submitBtn = page.locator('[data-testid="form-vacation-submit-button-ui"]');
+    const btnVisible = await submitBtn.isVisible({ timeout: 8000 }).catch(() => false);
+
+    if (btnVisible) {
+      console.log('  Clicking submit...');
+      await submitBtn.click().catch((e) => console.log(`  Click error: ${e.message}`));
+
+      if (TEST_MODE) {
+        await sleep(4000);
+        const shot2 = `./results/screenshot_step2_${isoDate(checkIn)}.png`;
+        await page.screenshot({ path: shot2, fullPage: false }).catch(() => {});
+        console.log(`  📸 step-2 screenshot → ${shot2}`);
+        console.log(`  Current URL: ${page.url()}`);
+        // Wait up to 25s more for the pricing API to respond
+        await sleep(25000);
+      } else {
+        // Production: wait up to 35s for the pricing API response
+        await sleep(35000);
+      }
+    } else {
+      console.log('  Submit button not found — page HTML snippet:');
+      if (TEST_MODE) {
+        const html = await page.content().catch(() => '');
+        console.log(html.slice(0, 3000));
+      }
+    }
+
+    done(null);
   });
 }
 
