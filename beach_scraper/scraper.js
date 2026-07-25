@@ -146,8 +146,8 @@ const TEST_MODE = process.env.TEST_MODE === 'true';
 //   [data-testid="select-guests-ui"]           opens Adults/Children/Infants counters
 //   [data-testid="form-vacation-submit-button-ui"]  → advances to step-2 (ROOM)
 //
-// Child birthdates are NOT collected here; the wizard asks for them at the later
-// GUESTS step, so room pricing only needs the adult/child counts.
+// Child ages ARE required here, contrary to the served HTML: the age pickers
+// only mount once the Children counter is raised above zero.
 // A ketch cookie banner and a chat widget both float above the form and will
 // swallow clicks aimed at what is underneath them. Best-effort: neither is
 // guaranteed to appear, so every failure here is ignored.
@@ -339,8 +339,54 @@ async function fillVacationForm(page, checkIn, checkOut) {
   }
   await setCounter(page, 'Adults', adults, log);
   await setCounter(page, 'Children', children.length, log);
+
+  // Age pickers only exist once Children > 0, which is why they are absent
+  // from the served HTML. They are required: submitting without them yields
+  // "Please select age of child N or date is invalid".
+  await sleep(1500);
+  await setChildAges(page, checkIn, log);
+
   await page.keyboard.press('Escape').catch(() => {});
   await waitIdle(page);
+}
+
+// Ages are per-trip, not per-run: a child's age at check-in is what the OBE
+// prices against, so compute against the travel date rather than today.
+async function setChildAges(page, checkIn, log) {
+  const ages = config.occupancy.children.map((c) => ageAtDate(c.birthDate, isoDate(checkIn)));
+
+  // The control was not in the static HTML, so find it by shape: a <select>
+  // that describes itself as a child/age picker. react-aria also mirrors its
+  // custom selects into a hidden native <select>, which this picks up too.
+  const fields = await page.evaluate(() => {
+    return [...document.querySelectorAll('select')].map((s, i) => {
+      const labels = s.labels ? [...s.labels].map((l) => l.textContent).join(' ') : '';
+      const label = [s.getAttribute('aria-label'), labels, s.closest('label')?.textContent, s.name]
+        .filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+      return { i, label: label.slice(0, 100), options: [...s.options].map((o) => o.value).slice(0, 25) };
+    });
+  }).catch(() => []);
+
+  const childFields = fields.filter((f) => /child|age/i.test(f.label));
+  if (TEST_MODE) {
+    console.log(`    ${fields.length} selects on page; child/age candidates: ` +
+      JSON.stringify(childFields.map((f) => ({ i: f.i, label: f.label, opts: f.options.slice(0, 8) }))));
+  }
+
+  if (childFields.length < ages.length) {
+    throw new Error(`found ${childFields.length} child-age selects, need ${ages.length}`);
+  }
+
+  for (let n = 0; n < ages.length; n++) {
+    const field = childFields[n];
+    const target = String(ages[n]);
+    if (!field.options.includes(target)) {
+      throw new Error(`age ${target} not offered for child ${n + 1} (options: ${field.options.join(',')})`);
+    }
+    await page.locator('select').nth(field.i).selectOption(target);
+    log(`child ${n + 1} age = ${target}`);
+    await sleep(500);
+  }
 }
 
 // When the calendar misbehaves, capture enough to fix it without another
@@ -469,12 +515,23 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     await page.locator('[data-testid="form-vacation-submit-button-ui"]').click({ force: true });
     if (TEST_MODE) console.log('    submitted → waiting for room results');
 
-    // The room step announces itself with "N ROOMS FOUND".
-    await page
-      .getByText(/ROOMS FOUND/i)
-      .first()
-      .waitFor({ state: 'visible', timeout: 60000 })
-      .catch(() => {});
+    // Either the room step renders, or step-1 rejects the form and stays put.
+    await Promise.race([
+      page.getByText(/ROOMS FOUND/i).first().waitFor({ state: 'visible', timeout: 60000 }),
+      page.getByText(/check the highlighted fields/i).first().waitFor({ state: 'visible', timeout: 60000 }),
+    ]).catch(() => {});
+
+    // A rejected form silently looks like "no rooms", so surface why instead.
+    if (await page.getByText(/check the highlighted fields/i).first().isVisible().catch(() => false)) {
+      const detail = await page
+        .evaluate(() => [...document.querySelectorAll('*')]
+          .map((e) => (e.childElementCount === 0 ? e.textContent.trim() : ''))
+          .filter((t) => /please (select|enter|choose)|is invalid/i.test(t))
+          .slice(0, 4).join('; '))
+        .catch(() => '');
+      throw new Error(`form rejected: ${detail || 'unspecified validation error'}`);
+    }
+
     await sleep(5000); // let the first batch of cards paint
 
     const rooms = await extractRoomsFromDom(page);
