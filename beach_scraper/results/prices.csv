@@ -1,4 +1,4 @@
 checkIn,checkOut,nights,price,roomType,status,scrapedAt
-2026-12-20,2026-12-27,7,,,error: calendar popover never opened,2026-07-25T18:48:36.049Z
-2027-02-10,2027-02-16,6,,,error: calendar popover never opened,2026-07-25T18:48:36.049Z
-2027-04-05,2027-04-13,8,,,error: calendar popover never opened,2026-07-25T18:48:36.049Z
+2026-12-20,2026-12-27,7,,,error: could not read Adults counter,2026-07-25T18:57:52.272Z
+2027-02-10,2027-02-16,6,,,error: could not read Adults counter,2026-07-25T18:57:52.272Z
+2027-04-05,2027-04-13,8,,,error: could not read Adults counter,2026-07-25T18:57:52.272Z
