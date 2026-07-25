@@ -1,4 +1,4 @@
 checkIn,checkOut,nights,price,roomType,status,scrapedAt
-2026-12-20,2026-12-27,7,,,error: check-in cell 2026-12-20 never rendered,2026-07-25T18:17:12.589Z
-2027-02-10,2027-02-16,6,,,error: check-in cell 2027-02-10 never rendered,2026-07-25T18:17:12.589Z
-2027-04-05,2027-04-13,8,,,error: check-in cell 2027-04-05 never rendered,2026-07-25T18:17:12.589Z
+2026-12-20,2026-12-27,7,,,no_price,2026-07-25T18:26:33.984Z
+2027-02-10,2027-02-16,6,,,no_price,2026-07-25T18:26:33.984Z
+2027-04-05,2027-04-13,8,,,no_price,2026-07-25T18:26:33.984Z
