@@ -1,0 +1,16 @@
+# Start dates for MODE=dates (one ISO date per line).
+# Push with [recheck] in the commit message to run these.
+#
+# Set NIGHTS=6,7,8 to fill in +/-1 night on dates worth a closer look;
+# it defaults to 7.
+#
+# Currently: the only week the baseline could not price. Easter 2027 falls on
+# March 28, so this is probably genuinely sold out — this run records what the
+# page actually says instead of leaving it as a bare "no_price".
+2027-03-24
+2027-03-25
+2027-03-26
+2027-03-27
+2027-03-28
+2027-03-29
+2027-03-30

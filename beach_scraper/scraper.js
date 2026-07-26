@@ -59,10 +59,13 @@ function buildGrid(stayLengths) {
   return combos;
 }
 
+const RECHECK_FILE = path.join(__dirname, 'recheck.txt');
+
 // MODE selects the workload:
 //   test   - 3 combos, a fast smoke test of the whole pipeline
 //   probe  - 3 start dates x every length, to measure stay-length sensitivity
 //   phase1 - every start date at 7 nights only (the baseline sweep)
+//   dates  - just the dates in DATES or recheck.txt, at NIGHTS (default 7)
 //   full   - every start date x every length
 //
 // The probe showed per-night rate tracks stay length monotonically and
@@ -77,6 +80,19 @@ function buildSearchDates() {
   } else if (mode === 'probe') {
     const starts = ['2026-12-20', '2027-02-10', '2027-04-05'];
     combos = starts.flatMap((s) => config.stayLengths.map((n) => combo(s, n)));
+  } else if (mode === 'dates') {
+    // Targeted re-check of specific start dates — used to confirm a failure and
+    // as phase two: fill in +/-1 night on the dates worth a closer look.
+    // DATES wins if set, otherwise recheck.txt (one ISO date per line, # comments).
+    const listed =
+      process.env.DATES ||
+      (fs.existsSync(RECHECK_FILE)
+        ? fs.readFileSync(RECHECK_FILE, 'utf8').split('\n').map((l) => l.split('#')[0].trim()).filter(Boolean).join(',')
+        : '');
+    const dates = listed.split(',').map((s) => s.trim()).filter(Boolean);
+    if (dates.length === 0) throw new Error(`MODE=dates needs DATES or a non-empty ${RECHECK_FILE}`);
+    const lengths = (process.env.NIGHTS || '7').split(',').map((n) => parseInt(n.trim(), 10)).filter(Boolean);
+    combos = dates.flatMap((d) => lengths.map((n) => combo(d, n)));
   } else if (mode === 'phase1') {
     combos = buildGrid([7]);
   } else if (mode === 'full') {
@@ -613,7 +629,24 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
       );
     }
 
-    return rooms[0] || null;
+    if (rooms.length) return rooms[0];
+
+    // "No price" is ambiguous on its own — a sold-out week and a broken parser
+    // look identical in the CSV. Record what the page actually said.
+    const reason = await page
+      .evaluate(() => {
+        const t = document.body.innerText;
+        const m =
+          t.match(/\b\d[\d,]*\s+ROOMS?\s+FOUND/i) ||
+          t.match(/no\s+(rooms?|availability)[^.\n]{0,60}/i) ||
+          t.match(/not\s+available[^.\n]{0,60}/i) ||
+          t.match(/sold\s?out[^.\n]{0,40}/i) ||
+          t.match(/minimum\s+stay[^.\n]{0,60}/i);
+        return m ? m[0].trim().replace(/\s+/g, ' ') : '';
+      })
+      .catch(() => '');
+
+    return { empty: true, reason };
   } finally {
     page.off('response', resHandler);
   }
@@ -669,10 +702,14 @@ async function run() {
       try {
         const result = await interceptPriceSearch(page, checkIn, checkOut);
 
-        const row = result
+        const priced = result && !result.empty;
+        const row = priced
           ? { checkIn: checkInStr, checkOut: checkOutStr, nights, ...result, status: 'ok', scrapedAt }
-          : { checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null, status: 'no_price', scrapedAt };
-        console.log(result ? `$${result.price.toLocaleString()} — ${result.roomType}` : 'no price');
+          : {
+              checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null,
+              status: `no_price${result?.reason ? `: ${result.reason}` : ''}`, scrapedAt,
+            };
+        console.log(priced ? `$${result.price.toLocaleString()} — ${result.roomType}` : row.status);
         results.push(row);
         appendRow(row);
       } catch (err) {

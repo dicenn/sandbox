@@ -9,7 +9,10 @@ on:
         description: 'Workload to run'
         type: choice
         default: phase1
-        options: [phase1, full, probe, test]
+        options: [phase1, full, dates, probe, test]
+      nights:
+        description: 'Stay lengths for mode=dates, e.g. 6,7,8'
+        default: '7'
   push:
     branches: ['claude/beach-price-scraper-4jd7na']
     paths: ['.github/workflows/beach-prices.yml', 'beach_scraper/**']
@@ -25,7 +28,12 @@ env:
   # pipeline with the cheap probe, unless its commit message says [sweep],
   # which runs the full baseline — a push trigger is the only way to start one
   # when the caller cannot reach the dispatch API.
-  MODE: ${{ inputs.mode || (contains(github.event.head_commit.message, '[sweep]') && 'phase1' || 'probe') }}
+  MODE: >-
+    ${{ inputs.mode
+        || (contains(github.event.head_commit.message, '[sweep]') && 'phase1')
+        || (contains(github.event.head_commit.message, '[recheck]') && 'dates')
+        || 'probe' }}
+  NIGHTS: ${{ inputs.nights || '7' }}
 
 jobs:
   scrape:
