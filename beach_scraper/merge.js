@@ -18,13 +18,23 @@ if (shardFiles.length === 0) {
   process.exit(1);
 }
 
-const rows = shardFiles.flatMap((f) => {
-  const parsed = parseCsv(fs.readFileSync(path.join(dir, f), 'utf8'));
-  console.log(`  ${f}: ${parsed.length} rows`);
-  return parsed;
-});
+// Start from whatever was already committed, so a targeted re-check updates
+// only the dates it covered instead of replacing the whole baseline with them.
+const existing = fs.existsSync(config.resultsFile)
+  ? parseCsv(fs.readFileSync(config.resultsFile, 'utf8'))
+  : [];
+if (existing.length) console.log(`  carried forward: ${existing.length} rows`);
 
-// Shards cover disjoint combos, but a re-run could overlap — keep the newest.
+const rows = existing.concat(
+  shardFiles.flatMap((f) => {
+    const parsed = parseCsv(fs.readFileSync(path.join(dir, f), 'utf8'));
+    console.log(`  ${f}: ${parsed.length} rows`);
+    return parsed;
+  })
+);
+
+// Shards cover disjoint combos, but a re-check overlaps the baseline — the
+// newest reading of a given date wins.
 const byKey = new Map();
 for (const r of rows) {
   const key = `${r.checkIn}|${r.nights}`;
@@ -39,10 +49,11 @@ const merged = [...byKey.values()].sort(
 fs.writeFileSync(config.resultsFile, CSV_HEADER + '\n' + merged.map(csvRow).join('\n') + '\n');
 writeSummary(merged);
 
-const ok = merged.filter((r) => r.status === 'ok');
+const ok = merged.filter((r) => r.status === 'ok').length;
+const soldOut = merged.filter((r) => r.status.startsWith('sold_out')).length;
 console.log(
   `\nMerged ${shardFiles.length} shards → ${merged.length} combos ` +
-    `(${ok.length} priced, ${merged.length - ok.length} failed)`
+    `(${ok} priced, ${soldOut} sold out, ${merged.length - ok - soldOut} failed)`
 );
 console.log(`Wrote ${config.resultsFile} and ${config.summaryFile}`);
 

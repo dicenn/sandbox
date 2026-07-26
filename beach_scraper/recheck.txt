@@ -1,16 +1,14 @@
 # Start dates for MODE=dates (one ISO date per line).
-# Push with [recheck] in the commit message to run these.
+# Push with [recheck] in the commit message to run these, or dispatch the
+# workflow with mode=dates.
 #
-# Set NIGHTS=6,7,8 to fill in +/-1 night on dates worth a closer look;
-# it defaults to 7.
+# Set NIGHTS=6,7,8 to fill in +/-1 night on dates worth a closer look. The
+# probe showed stay length moves the per-night rate only 1-8% and preserves
+# the ranking between dates, so the baseline sweeps 7 nights and this fills
+# in the rest for the dates you actually care about.
 #
-# Currently: the Easter 2027 week the baseline could not price. The cards read
-# "SOLD OUT for your dates" rather than carrying a price, so this confirms
-# whether every room is gone or only the ones loaded first.
-2027-03-24
-2027-03-25
-2027-03-26
-2027-03-27
-2027-03-28
-2027-03-29
-2027-03-30
+# A re-check updates only the dates listed here; the rest of the baseline is
+# carried forward.
+2027-04-29
+2027-04-28
+2027-01-26
