@@ -21,8 +21,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Pushes only smoke-test the pipeline; the real sweep is dispatched manually.
-  MODE: ${{ github.event_name == 'push' && 'probe' || inputs.mode }}
+  # Dispatch picks the mode explicitly. Otherwise a push only smoke-tests the
+  # pipeline with the cheap probe, unless its commit message says [sweep],
+  # which runs the full baseline — a push trigger is the only way to start one
+  # when the caller cannot reach the dispatch API.
+  MODE: ${{ inputs.mode || (contains(github.event.head_commit.message, '[sweep]') && 'phase1' || 'probe') }}
 
 jobs:
   scrape:
