@@ -143,7 +143,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Verbose diagnostics (per-combo screenshots, request logs) are for the small
 // diagnostic modes only — a 151-combo sweep would bury the results directory.
-const TEST_MODE = ['test', 'probe'].includes(process.env.MODE || 'phase1');
+const TEST_MODE = ['test', 'probe', 'dates'].includes(process.env.MODE || 'phase1');
 
 // ── Core search ───────────────────────────────────────────────────────────────
 
@@ -645,6 +645,23 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
         return m ? m[0].trim().replace(/\s+/g, ' ') : '';
       })
       .catch(() => '');
+
+    // A populated list we cannot read is a parser bug, not a sold-out week, so
+    // keep the markup that defeated it.
+    if (TEST_MODE) {
+      const html = await page
+        .evaluate(() => {
+          const marker = [...document.querySelectorAll('*')].find(
+            (e) => e.childElementCount === 0 && /ROOMS?\s+FOUND/i.test(e.textContent)
+          );
+          let node = marker;
+          for (let i = 0; i < 6 && node?.parentElement; i++) node = node.parentElement;
+          return (node || document.body).outerHTML.slice(0, 40000);
+        })
+        .catch(() => '');
+      fs.writeFileSync(`./results/empty_${isoDate(checkIn)}.html`, html);
+      console.log(`    saved empty-list markup (${html.length} bytes)`);
+    }
 
     return { empty: true, reason };
   } finally {
