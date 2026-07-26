@@ -1,5 +1,5 @@
 # Beaches TCI Price Summary
-Run: 2026-07-26T08:22:52.786Z
+Run: 2026-07-26T08:30:45.233Z
 Priced 9 of 9 date combinations.
 
 ## Cheapest 15 by per-night rate
