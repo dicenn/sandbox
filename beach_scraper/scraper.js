@@ -199,13 +199,21 @@ async function killChatWidget(page) {
   await page.evaluate(CHAT_JANITOR).catch(() => {});
 }
 
+// Every date on a month boundary is rendered twice: once as padding inside the
+// adjacent month's grid, carrying hidden="", and once for real. The padding
+// copy is marked disabled, so matching it looks exactly like a sold-out date —
+// that is what failed every 1st-of-month check-in in the first full sweep.
+// Excluding hidden cells picks the real one and leaves genuine unavailability
+// still detectable on it.
+const dayCell = (iso) => `[data-testid="calendar-cell-ui"][data-date="${iso}"]:not([hidden])`;
+
 // The hydrated calendar only mounts two months at a time behind a next arrow,
 // even though the server-rendered HTML contains every day through 2028. Page
 // forward until the target day exists. The arrow carries no label or testid,
 // so mark it in-page: inside the calendar, the nav buttons are the icon-only
 // ones that aren't day cells. Fall back to react-aria's PageDown handling.
 async function pageCalendarTo(page, targetIso, log, maxPages = 40) {
-  const cell = `[data-testid="calendar-cell-ui"][data-date="${targetIso}"]`;
+  const cell = dayCell(targetIso);
 
   for (let i = 0; i <= maxPages; i++) {
     if (await page.locator(cell).first().count()) {
@@ -315,7 +323,7 @@ async function fillVacationForm(page, checkIn, checkOut) {
       await dumpCalendarDiagnostics(page, checkIn, log);
       throw new Error(`${label} cell ${isoDate(d)} never rendered`);
     }
-    const cell = page.locator(`[data-testid="calendar-cell-ui"][data-date="${isoDate(d)}"]`).first();
+    const cell = page.locator(dayCell(isoDate(d))).first();
     await cell.scrollIntoViewIfNeeded().catch(() => {});
     if ((await cell.getAttribute('data-disabled').catch(() => null)) === 'true') {
       throw new Error(`${label} ${isoDate(d)} is unavailable`);
