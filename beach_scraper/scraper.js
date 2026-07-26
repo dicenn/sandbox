@@ -506,6 +506,35 @@ async function extractRoomsFromDom(page) {
     .catch(() => []);
 }
 
+// Cards stream in and the list re-sorts as they land, so a fixed wait can read
+// a half-rendered list and report a more expensive room as the cheapest. Poll
+// until the room count and the minimum price both stop moving.
+async function waitForStableRooms(page, attempts = 14, intervalMs = 1500) {
+  let previous = null;
+  let stable = 0;
+  let rooms = [];
+
+  for (let i = 0; i < attempts; i++) {
+    rooms = await extractRoomsFromDom(page);
+    rooms.sort((a, b) => a.price - b.price);
+
+    const signature = rooms.length ? `${rooms.length}|${rooms[0].price}` : 'empty';
+    if (rooms.length && signature === previous) {
+      if (++stable >= 2) break; // three consecutive identical reads
+    } else {
+      stable = 0;
+    }
+    previous = signature;
+    await sleep(intervalMs);
+  }
+
+  if (TEST_MODE) {
+    console.log(`    rooms settled at ${rooms.length} cards` +
+      (rooms.length ? `, cheapest $${rooms[0].price}` : ''));
+  }
+  return rooms;
+}
+
 async function interceptPriceSearch(page, checkIn, checkOut) {
   // The OBE echoes the search back on this endpoint, which is the only
   // trustworthy confirmation that the form applied what we intended.
@@ -553,10 +582,7 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
       throw new Error(`form rejected: ${detail || 'unspecified validation error'}`);
     }
 
-    await sleep(5000); // let the first batch of cards paint
-
-    const rooms = await extractRoomsFromDom(page);
-    rooms.sort((a, b) => a.price - b.price);
+    const rooms = await waitForStableRooms(page);
 
     if (TEST_MODE) {
       await page.screenshot({ path: `./results/step2_rooms_${isoDate(checkIn)}.png`, fullPage: true }).catch(() => {});
