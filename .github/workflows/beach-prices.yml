@@ -33,7 +33,8 @@ env:
         || (contains(github.event.head_commit.message, '[sweep]') && 'phase1')
         || (contains(github.event.head_commit.message, '[recheck]') && 'dates')
         || 'probe' }}
-  NIGHTS: ${{ inputs.nights || '7' }}
+  # Left empty so mode=dates falls back to every configured stay length.
+  NIGHTS: ${{ inputs.nights }}
 
 jobs:
   scrape:

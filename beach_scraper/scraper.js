@@ -91,7 +91,10 @@ function buildSearchDates() {
         : '');
     const dates = listed.split(',').map((s) => s.trim()).filter(Boolean);
     if (dates.length === 0) throw new Error(`MODE=dates needs DATES or a non-empty ${RECHECK_FILE}`);
-    const lengths = (process.env.NIGHTS || '7').split(',').map((n) => parseInt(n.trim(), 10)).filter(Boolean);
+    // Defaults to every configured length: the point of re-checking a specific
+    // date is usually to see +/-1 night on it, which the baseline skips.
+    const lengths = (process.env.NIGHTS || config.stayLengths.join(','))
+      .split(',').map((n) => parseInt(n.trim(), 10)).filter(Boolean);
     combos = dates.flatMap((d) => lengths.map((n) => combo(d, n)));
   } else if (mode === 'phase1') {
     combos = buildGrid([7]);
