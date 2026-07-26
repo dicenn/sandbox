@@ -2,19 +2,36 @@ name: Beach Price Scraper
 
 on:
   # No schedule: prices for a trip this far out move slowly, so this runs as a
-  # baseline plus on-demand re-checks rather than on a timer. Re-add a cron here
-  # if that changes.
-  workflow_dispatch: # trigger manually from the GitHub UI
+  # baseline plus on-demand re-checks rather than on a timer.
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Workload to run'
+        type: choice
+        default: phase1
+        options: [phase1, full, probe, test]
   push:
     branches: ['claude/beach-price-scraper-4jd7na']
     paths: ['.github/workflows/beach-prices.yml', 'beach_scraper/**']
 
+# A second run committing results while one is in flight would collide on the
+# branch, so let the newer run win.
+concurrency:
+  group: beach-prices-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pushes only smoke-test the pipeline; the real sweep is dispatched manually.
+  MODE: ${{ github.event_name == 'push' && 'probe' || inputs.mode }}
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ github.event_name == 'push' && 30 || 120 }}
-    permissions:
-      contents: write
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false # one bad shard shouldn't discard the other four
+      matrix:
+        shard: [0, 1, 2, 3, 4]
 
     steps:
       - uses: actions/checkout@v4
@@ -36,36 +53,60 @@ jobs:
       - name: Run scraper
         working-directory: beach_scraper
         env:
-          # Pushes run the 9-combo probe (3 start dates x 6/7/8 nights) that
-          # measures how much stay length moves the per-night rate.
-          PROBE_MODE: ${{ github.event_name == 'push' && 'true' || '' }}
+          SHARD_INDEX: ${{ matrix.shard }}
+          SHARD_COUNT: 5
         run: node scraper.js
+
+      - name: Upload shard results
+        if: always() # a timed-out shard still has partial rows worth keeping
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-${{ matrix.shard }}
+          path: |
+            beach_scraper/results/prices.shard-*.csv
+            beach_scraper/results/*.png
+          retention-days: 90
+          if-no-files-found: warn
+
+  merge:
+    needs: scrape
+    if: always() # merge whatever shards did finish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Download shard results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: shard-*
+          merge-multiple: true
+          path: beach_scraper/results/
+
+      - name: Merge shards
+        working-directory: beach_scraper
+        run: node merge.js
 
       - name: Commit results
         run: |
           git config user.name  "beach-price-bot"
           git config user.email "bot@noreply"
           git add beach_scraper/results/
-          git diff --cached --quiet || git commit -m "chore: weekly beach price update $(date -u +%Y-%m-%d)"
-          git push
+          git diff --cached --quiet || git commit -m "chore: beach price sweep ($MODE) $(date -u +%Y-%m-%d)"
+          # The scrape jobs take up to 90 minutes; rebase in case the branch moved.
+          for i in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((2 ** i))
+          done
+          exit 1
 
-      # Optional: send yourself the summary by email.
-      # Uncomment and add GMAIL_USER + GMAIL_PASS as GitHub repo secrets
-      # to get a weekly email with the top deals.
-      #
-      # - name: Email summary
-      #   uses: dawidd6/action-send-mail@v3
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     username: ${{ secrets.GMAIL_USER }}
-      #     password: ${{ secrets.GMAIL_PASS }}
-      #     subject: "Beaches TCI prices — ${{ github.run_number }}"
-      #     to: your@email.com
-      #     from: ${{ secrets.GMAIL_USER }}
-      #     body: ${{ steps.scrape.outputs.summary }}
-
-      - name: Upload results as artifact
+      - name: Upload merged results
         if: always()
         uses: actions/upload-artifact@v4
         with:

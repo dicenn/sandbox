@@ -2,6 +2,7 @@ const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 const config = require('./config');
+const { CSV_HEADER, csvRow, writeSummary } = require('./results-format');
 
 // ── Date helpers ──────────────────────────────────────────────────────────────
 
@@ -32,23 +33,10 @@ function combo(checkInIso, nights) {
   return { checkIn, checkOut, nights };
 }
 
-// Build every (checkIn, nights) combination we want to search
-function buildSearchDates() {
-  if (process.env.TEST_MODE === 'true') {
-    // 3 representative combos spread across the search window
-    return [combo('2026-12-20', 7), combo('2027-02-10', 6), combo('2027-04-05', 8)];
-  }
-
-  // Holds the start date fixed and varies only the stay length, to measure
-  // whether +/-1 night moves the per-night rate enough to be worth scraping.
-  // Three start dates: holiday peak, mid-season, and shoulder.
-  if (process.env.PROBE_MODE === 'true') {
-    const starts = ['2026-12-20', '2027-02-10', '2027-04-05'];
-    return starts.flatMap((s) => config.stayLengths.map((n) => combo(s, n)));
-  }
-
+// Every start date in the configured window, one entry per requested length.
+function buildGrid(stayLengths) {
   const combos = [];
-  const { searchMonths, searchYearStart, searchYearEnd, stayLengths } = config;
+  const { searchMonths, searchYearStart, searchYearEnd } = config;
 
   for (const nights of stayLengths) {
     for (let year = searchYearStart; year <= searchYearEnd; year++) {
@@ -71,6 +59,43 @@ function buildSearchDates() {
   return combos;
 }
 
+// MODE selects the workload:
+//   test   - 3 combos, a fast smoke test of the whole pipeline
+//   probe  - 3 start dates x every length, to measure stay-length sensitivity
+//   phase1 - every start date at 7 nights only (the baseline sweep)
+//   full   - every start date x every length
+//
+// The probe showed per-night rate tracks stay length monotonically and
+// preserves the ranking between start dates, so phase1 finds the same good
+// windows as full at a third of the cost.
+function buildSearchDates() {
+  const mode = process.env.MODE || 'phase1';
+
+  let combos;
+  if (mode === 'test') {
+    combos = [combo('2026-12-20', 7), combo('2027-02-10', 6), combo('2027-04-05', 8)];
+  } else if (mode === 'probe') {
+    const starts = ['2026-12-20', '2027-02-10', '2027-04-05'];
+    combos = starts.flatMap((s) => config.stayLengths.map((n) => combo(s, n)));
+  } else if (mode === 'phase1') {
+    combos = buildGrid([7]);
+  } else if (mode === 'full') {
+    combos = buildGrid(config.stayLengths);
+  } else {
+    throw new Error(`unknown MODE "${mode}" (expected test|probe|phase1|full)`);
+  }
+
+  // Round-robin rather than contiguous blocks: every shard then covers the
+  // whole season, so a shard that dies still leaves usable spread instead of
+  // a hole in one month.
+  const count = parseInt(process.env.SHARD_COUNT, 10);
+  const index = parseInt(process.env.SHARD_INDEX, 10);
+  if (Number.isFinite(count) && Number.isFinite(index) && count > 1) {
+    combos = combos.filter((_, i) => i % count === index);
+  }
+  return combos;
+}
+
 // ── CSV helpers ───────────────────────────────────────────────────────────────
 
 function ensureResultsDir() {
@@ -78,98 +103,31 @@ function ensureResultsDir() {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-function appendRow(row) {
-  const file = config.resultsFile;
-  const isNew = !fs.existsSync(file);
-  // Totals are not comparable across stay lengths, so carry the per-night rate.
-  const perNight = row.price ? Math.round(row.price / row.nights) : '';
-  const line = [
-    row.checkIn,
-    row.checkOut,
-    row.nights,
-    row.price ?? '',
-    perNight,
-    `"${(row.roomType ?? '').replace(/"/g, '""')}"`,
-    `"${String(row.status).replace(/"/g, '""')}"`, // error text contains commas
-    row.scrapedAt,
-  ].join(',');
-
-  if (isNew) {
-    fs.writeFileSync(file, 'checkIn,checkOut,nights,price,pricePerNight,roomType,status,scrapedAt\n');
-  }
-  fs.appendFileSync(file, line + '\n');
+// Shards run in parallel jobs and are merged afterwards, so each writes its own
+// file — they would otherwise race for the same one.
+function resultsFileForShard() {
+  const index = parseInt(process.env.SHARD_INDEX, 10);
+  if (!Number.isFinite(index)) return config.resultsFile;
+  const dir = path.dirname(config.resultsFile);
+  return path.join(dir, `prices.shard-${index}.csv`);
 }
 
-// ── Summary markdown ──────────────────────────────────────────────────────────
+function appendRow(row) {
+  const file = resultsFileForShard();
+  const isNew = !fs.existsSync(file);
+  const line = csvRow(row);
 
-function writeSummary(results) {
-  const found = results.filter((r) => r.price !== null);
-  if (found.length === 0) {
-    fs.writeFileSync(config.summaryFile, '# Beaches TCI Price Summary\n\nNo prices found this run.\n');
-    return;
-  }
-
-  found.sort((a, b) => a.price - b.price);
-  const top10 = found.slice(0, 10);
-
-  const rows = top10
-    .map(
-      (r) =>
-        `| ${r.checkIn} | ${r.checkOut} | ${r.nights} nights | $${r.price.toLocaleString()} | ` +
-        `$${Math.round(r.price / r.nights).toLocaleString()} | ${r.roomType} |`
-    )
-    .join('\n');
-
-  // Group by start date so varying the stay length is directly comparable.
-  const byStart = new Map();
-  for (const r of found) {
-    if (!byStart.has(r.checkIn)) byStart.set(r.checkIn, []);
-    byStart.get(r.checkIn).push(r);
-  }
-  const lengthRows = [...byStart.entries()]
-    .filter(([, rs]) => rs.length > 1)
-    .map(([start, rs]) => {
-      rs.sort((a, b) => a.nights - b.nights);
-      const cells = rs.map((r) => `${r.nights}n $${Math.round(r.price / r.nights).toLocaleString()}`);
-      const rates = rs.map((r) => r.price / r.nights);
-      const spread = Math.round(((Math.max(...rates) - Math.min(...rates)) / Math.min(...rates)) * 100);
-      return `| ${start} | ${cells.join(' · ')} | ${spread}% |`;
-    })
-    .join('\n');
-
-  const summary = `# Beaches TCI Price Summary
-Run: ${new Date().toISOString()}
-
-## Top 10 Cheapest Options
-
-| Check In | Check Out | Stay | Total (USD) | Per night | Room |
-|----------|-----------|------|-------------|-----------|------|
-${rows}
-
-*Showing cheapest available room per date combination.*
-${lengthRows ? `
-## Effect of stay length (same start date)
-
-| Check In | Per-night rate by stay length | Spread |
-|----------|-------------------------------|--------|
-${lengthRows}
-
-*Spread is the gap between the cheapest and priciest per-night rate for that
-start date. A small spread means +/-1 night is not worth scraping separately.*
-` : ''}`;
-
-  fs.writeFileSync(config.summaryFile, summary);
-  console.log('\n── Top 5 deals ──');
-  top10.slice(0, 5).forEach((r) => {
-    console.log(`  ${r.checkIn} → ${r.checkOut} (${r.nights}n): $${r.price.toLocaleString()} — ${r.roomType}`);
-  });
+  if (isNew) fs.writeFileSync(file, CSV_HEADER + '\n');
+  fs.appendFileSync(file, line + '\n');
 }
 
 // ── Sleep ─────────────────────────────────────────────────────────────────────
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-const TEST_MODE = process.env.TEST_MODE === 'true';
+// Verbose diagnostics (per-combo screenshots, request logs) are for the small
+// diagnostic modes only — a 151-combo sweep would bury the results directory.
+const TEST_MODE = ['test', 'probe'].includes(process.env.MODE || 'phase1');
 
 // ── Core search ───────────────────────────────────────────────────────────────
 
@@ -633,7 +591,8 @@ async function run() {
   ensureResultsDir();
 
   // Clear results file for fresh run
-  if (fs.existsSync(config.resultsFile)) fs.unlinkSync(config.resultsFile);
+  const outFile = resultsFileForShard();
+  if (fs.existsSync(outFile)) fs.unlinkSync(outFile);
 
   const browser = await chromium.launch({
     headless: true,
@@ -655,11 +614,16 @@ async function run() {
   const results = [];
   const scrapedAt = new Date().toISOString();
 
+  // Each combo loads the OBE fresh and drives the step-1 form itself, so there
+  // is no shared session to set up here.
+  const combos = buildSearchDates();
+  const shard = process.env.SHARD_INDEX;
+  console.log(
+    `Mode ${process.env.MODE || 'phase1'}${shard === undefined ? '' : ` shard ${shard}/${process.env.SHARD_COUNT}`}: ` +
+      `${combos.length} date combinations`
+  );
+
   try {
-    // Each combo loads the OBE fresh and drives the step-1 form itself,
-    // so there is no shared session to set up here.
-    const combos = buildSearchDates();
-    console.log(`Running ${combos.length} date combinations...`);
 
     for (let i = 0; i < combos.length; i++) {
       const { checkIn, checkOut, nights } = combos[i];
@@ -671,18 +635,17 @@ async function run() {
       try {
         const result = await interceptPriceSearch(page, checkIn, checkOut);
 
-        if (result) {
-          console.log(`$${result.price.toLocaleString()} — ${result.roomType}`);
-          const row = { checkIn: checkInStr, checkOut: checkOutStr, nights, ...result, status: 'ok', scrapedAt };
-          results.push(row);
-          appendRow(row);
-        } else {
-          console.log('no price');
-          appendRow({ checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null, status: 'no_price', scrapedAt });
-        }
+        const row = result
+          ? { checkIn: checkInStr, checkOut: checkOutStr, nights, ...result, status: 'ok', scrapedAt }
+          : { checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null, status: 'no_price', scrapedAt };
+        console.log(result ? `$${result.price.toLocaleString()} — ${result.roomType}` : 'no price');
+        results.push(row);
+        appendRow(row);
       } catch (err) {
         console.log(`error: ${err.message}`);
-        appendRow({ checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null, status: `error: ${err.message}`, scrapedAt });
+        const row = { checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null, status: `error: ${err.message}`, scrapedAt };
+        results.push(row);
+        appendRow(row);
       }
 
       // Polite delay between requests
@@ -694,9 +657,15 @@ async function run() {
     await browser.close();
   }
 
-  writeSummary(results);
-  console.log(`\nDone. Results written to ${config.resultsFile}`);
-  console.log(`Summary written to ${config.summaryFile}`);
+  const ok = results.filter((r) => r.status === 'ok').length;
+  console.log(`\nDone. ${ok}/${combos.length} priced. Results in ${resultsFileForShard()}`);
+
+  // Sharded runs are summarised once by the merge step, after every shard has
+  // landed — writing it here would just produce a partial file per shard.
+  if (!Number.isFinite(parseInt(process.env.SHARD_INDEX, 10))) {
+    writeSummary(results);
+    console.log(`Summary written to ${config.summaryFile}`);
+  }
 }
 
 run().catch((err) => {
