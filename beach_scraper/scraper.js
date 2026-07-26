@@ -559,6 +559,42 @@ async function waitForStableRooms(page, attempts = 14, intervalMs = 1500) {
   return rooms;
 }
 
+// Cards lazy-load on scroll. Only worth paying for when the first batch had no
+// prices at all: the list is sorted cheapest-first, so if anything priced is
+// already loaded, the minimum is among it and scrolling adds nothing.
+// Each card carries exactly one "Category Code:", which counts them without
+// depending on a class name.
+async function loadAllRooms(page, maxScrolls = 15) {
+  let previous = -1;
+  for (let i = 0; i < maxScrolls; i++) {
+    const count = await page
+      .evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+        return (document.body.innerText.match(/Category Code:/g) || []).length;
+      })
+      .catch(() => -1);
+    if (count === previous) break;
+    previous = count;
+    await sleep(1500);
+  }
+  return previous;
+}
+
+// Distinguishes a genuinely sold-out week from a parser that failed on a
+// populated list — they are the same empty result otherwise.
+async function roomListStats(page) {
+  return page
+    .evaluate(() => {
+      const t = document.body.innerText;
+      return {
+        cards: (t.match(/Category Code:/g) || []).length,
+        soldOut: (t.match(/SOLD\s?OUT/gi) || []).length,
+        found: ((t.match(/\b[\d,]+\s+ROOMS?\s+FOUND/i) || [''])[0] || '').trim(),
+      };
+    })
+    .catch(() => ({ cards: 0, soldOut: 0, found: '' }));
+}
+
 async function interceptPriceSearch(page, checkIn, checkOut) {
   // The OBE echoes the search back on this endpoint, which is the only
   // trustworthy confirmation that the form applied what we intended.
@@ -606,7 +642,15 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
       throw new Error(`form rejected: ${detail || 'unspecified validation error'}`);
     }
 
-    const rooms = await waitForStableRooms(page);
+    let rooms = await waitForStableRooms(page);
+
+    // Nothing priced in the first batch. Sold-out cards can fill the top of the
+    // list, so pull in the rest before calling the week unavailable.
+    if (rooms.length === 0) {
+      const cards = await loadAllRooms(page);
+      if (TEST_MODE) console.log(`    no prices in first batch; loaded ${cards} cards`);
+      rooms = await waitForStableRooms(page);
+    }
 
     if (TEST_MODE) {
       await page.screenshot({ path: `./results/step2_rooms_${isoDate(checkIn)}.png`, fullPage: true }).catch(() => {});
@@ -632,19 +676,13 @@ async function interceptPriceSearch(page, checkIn, checkOut) {
     if (rooms.length) return rooms[0];
 
     // "No price" is ambiguous on its own — a sold-out week and a broken parser
-    // look identical in the CSV. Record what the page actually said.
-    const reason = await page
-      .evaluate(() => {
-        const t = document.body.innerText;
-        const m =
-          t.match(/\b\d[\d,]*\s+ROOMS?\s+FOUND/i) ||
-          t.match(/no\s+(rooms?|availability)[^.\n]{0,60}/i) ||
-          t.match(/not\s+available[^.\n]{0,60}/i) ||
-          t.match(/sold\s?out[^.\n]{0,40}/i) ||
-          t.match(/minimum\s+stay[^.\n]{0,60}/i);
-        return m ? m[0].trim().replace(/\s+/g, ' ') : '';
-      })
-      .catch(() => '');
+    // look identical in the CSV. Every card marked SOLD OUT is real data worth
+    // recording as such; anything else is our problem, not the resort's.
+    const stats = await roomListStats(page);
+    const reason =
+      stats.cards > 0 && stats.soldOut >= stats.cards
+        ? `sold_out: all ${stats.cards} rooms`
+        : `unparsed: ${stats.cards} cards, ${stats.soldOut} sold out${stats.found ? `, ${stats.found}` : ''}`;
 
     // A populated list we cannot read is a parser bug, not a sold-out week, so
     // keep the markup that defeated it.
@@ -724,7 +762,7 @@ async function run() {
           ? { checkIn: checkInStr, checkOut: checkOutStr, nights, ...result, status: 'ok', scrapedAt }
           : {
               checkIn: checkInStr, checkOut: checkOutStr, nights, price: null, roomType: null,
-              status: `no_price${result?.reason ? `: ${result.reason}` : ''}`, scrapedAt,
+              status: result?.reason || 'no_price', scrapedAt,
             };
         console.log(priced ? `$${result.price.toLocaleString()} — ${result.roomType}` : row.status);
         results.push(row);

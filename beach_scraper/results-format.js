@@ -106,11 +106,13 @@ function writeSummary(results) {
     })
     .join('\n');
 
-  const failed = results.filter((r) => r.status !== 'ok');
+  // A sold-out week is a real answer about the resort, not a scraper failure.
+  const soldOut = results.filter((r) => r.status.startsWith('sold_out'));
+  const failed = results.filter((r) => r.status !== 'ok' && !r.status.startsWith('sold_out'));
 
   const summary = `# Beaches TCI Price Summary
 Run: ${new Date().toISOString()}
-Priced ${found.length} of ${results.length} date combinations${failed.length ? ` (${failed.length} failed)` : ''}.
+Priced ${found.length} of ${results.length} date combinations${soldOut.length ? `, ${soldOut.length} sold out` : ''}${failed.length ? `, ${failed.length} failed` : ''}.
 
 ## Cheapest 15 by per-night rate
 
@@ -129,6 +131,12 @@ ${lengthRows ? `
 | Check In | Per-night rate by stay length | Spread |
 |----------|-------------------------------|--------|
 ${lengthRows}
+` : ''}${soldOut.length ? `
+## Sold out
+
+No availability for these start dates:
+
+${soldOut.map((r) => `- ${r.checkIn} → ${r.checkOut} (${r.nights}n)`).join('\n')}
 ` : ''}${failed.length ? `
 ## Failures
 

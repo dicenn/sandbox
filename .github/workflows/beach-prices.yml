@@ -76,6 +76,7 @@ jobs:
           path: |
             beach_scraper/results/prices.shard-*.csv
             beach_scraper/results/*.png
+            beach_scraper/results/*.html
           retention-days: 90
           if-no-files-found: warn
 
