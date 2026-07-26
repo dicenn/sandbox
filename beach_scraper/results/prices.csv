@@ -55,7 +55,9 @@ checkIn,checkOut,nights,price,pricePerNight,roomType,status,scrapedAt
 2027-01-23,2027-01-30,7,9639,1377,"French Village Luxury Room Double","ok",2026-07-26T10:12:28.168Z
 2027-01-24,2027-01-31,7,9639,1377,"French Village Luxury Room Double","ok",2026-07-26T10:12:24.275Z
 2027-01-25,2027-02-01,7,9639,1377,"French Village Luxury Room Double","ok",2026-07-26T10:12:24.000Z
-2027-01-26,2027-02-02,7,9562,1366,"Caribbean Deluxe Double","ok",2026-07-26T10:12:17.747Z
+2027-01-26,2027-02-01,6,8167,1361,"Caribbean Deluxe Double","ok",2026-07-26T10:43:16.674Z
+2027-01-26,2027-02-02,7,9562,1366,"Caribbean Deluxe Double","ok",2026-07-26T10:42:42.895Z
+2027-01-26,2027-02-03,8,11082,1385,"Caribbean Deluxe Double","ok",2026-07-26T10:42:50.389Z
 2027-01-27,2027-02-03,7,9600,1371,"Caribbean Deluxe Double","ok",2026-07-26T10:12:30.036Z
 2027-01-28,2027-02-04,7,9638,1377,"Caribbean Deluxe Double","ok",2026-07-26T10:12:28.168Z
 2027-01-29,2027-02-05,7,9676,1382,"Caribbean Deluxe Double","ok",2026-07-26T10:12:24.275Z
@@ -147,6 +149,10 @@ checkIn,checkOut,nights,price,pricePerNight,roomType,status,scrapedAt
 2027-04-25,2027-05-02,7,9983,1426,"Caribbean Deluxe King","ok",2026-07-26T10:12:24.000Z
 2027-04-26,2027-05-03,7,9777,1397,"Caribbean Deluxe King","ok",2026-07-26T10:12:17.747Z
 2027-04-27,2027-05-04,7,9657,1380,"French Village Luxury Room King","ok",2026-07-26T10:12:30.036Z
-2027-04-28,2027-05-05,7,9432,1347,"French Village Luxury Room King","ok",2026-07-26T10:12:28.168Z
-2027-04-29,2027-05-06,7,9207,1315,"French Village Luxury Room King","ok",2026-07-26T10:12:24.275Z
+2027-04-28,2027-05-04,6,8185,1364,"French Village Luxury Room King","ok",2026-07-26T10:42:50.389Z
+2027-04-28,2027-05-05,7,9432,1347,"French Village Luxury Room King","ok",2026-07-26T10:42:43.635Z
+2027-04-28,2027-05-06,8,10805,1351,"French Village Luxury Room King","ok",2026-07-26T10:42:41.436Z
+2027-04-29,2027-05-05,6,7960,1327,"French Village Luxury Room King","ok",2026-07-26T10:42:41.436Z
+2027-04-29,2027-05-06,7,9207,1315,"French Village Luxury Room King","ok",2026-07-26T10:43:16.674Z
+2027-04-29,2027-05-07,8,12162,1520,"Caribbean Honeymoon Grande Luxe King","ok",2026-07-26T10:42:42.895Z
 2027-04-30,2027-05-07,7,10324,1475,"Caribbean Honeymoon Grande Luxe King","ok",2026-07-26T10:12:24.000Z
